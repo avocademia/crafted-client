@@ -101,92 +101,94 @@ const SignUp = () => {
     <main>
       <AuthNav/>
       <ToastContainer/>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>First Name</label>
-          <input type="text" {...register('first_name', { required: 'First Name is required' })} />
-          {errors.first_name && <span>{errors.first_name.message}</span>}
-        </div>
+      <section className={styles.mainSection}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div>
+            <label>First Name</label>
+            <input type="text" {...register('first_name', { required: 'First Name is required' })} />
+            {errors.first_name && <span>{errors.first_name.message}</span>}
+          </div>
 
-        <div>
-          <label>Surname</label>
-          <input type="text" {...register('last_name', { required: 'Surname is required' })} />
-          {errors.last_name && <span>{errors.last_name.message}</span>}
-        </div>
+          <div>
+            <label>Surname</label>
+            <input type="text" {...register('last_name', { required: 'Surname is required' })} />
+            {errors.last_name && <span>{errors.last_name.message}</span>}
+          </div>
 
-        <div>
-          <label>Username</label>
-          <input type="text" {...register('username', { required: 'Username is required' })} />
-          {errors.username && <span>{errors.username.message}</span>}
-        </div>
+          <div>
+            <label>Username</label>
+            <input type="text" {...register('username', { required: 'Username is required' })} />
+            {errors.username && <span>{errors.username.message}</span>}
+          </div>
 
-        <div>
-          <label>Whatsapp Number</label>
-          <input type="tel" {...register('whatsapp_number', { required: 'Whatsapp number required' })} />
-          {errors.whatsapp_number && <span>{errors.whatsapp_number.message}</span>}
-        </div>
+          <div>
+            <label>Whatsapp Number</label>
+            <input type="tel" {...register('whatsapp_number', { required: 'Whatsapp number required' })} />
+            {errors.whatsapp_number && <span>{errors.whatsapp_number.message}</span>}
+          </div>
 
-        <div>
-          <label>Email</label>
-          <input type="email"
-            {...register('email',
-              { required: 'Email is required',
-                pattern: { value: /\S+@\S+\.\S+/, message: 'Invalid email address' }
-              })}
-          />
-          {errors.email && <span>{errors.email.message}</span>}
-        </div>
+          <div>
+            <label>Email</label>
+            <input type="email"
+              {...register('email',
+                { required: 'Email is required',
+                  pattern: { value: /\S+@\S+\.\S+/, message: 'Invalid email address' }
+                })}
+            />
+            {errors.email && <span>{errors.email.message}</span>}
+          </div>
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            {...register('password', { required: 'Password is required', validate: validatePassword })}
-            onChange={handlePasswordChange}
-          />
-          {errors.password && <span>{errors.password.message}</span>}
+          <div>
+            <label>Password</label>
+            <input
+              type="password"
+              {...register('password', { required: 'Password is required', validate: validatePassword })}
+              onChange={handlePasswordChange}
+            />
+            {errors.password && <span>{errors.password.message}</span>}
 
-          <ul>
-            <li className={passwordStrength.hasUpperCase ? styles.valid : styles.invalid}>Has an uppercase letter</li>
-            <li className={passwordStrength.hasLowerCase? styles.valid : styles.invalid}>Has a lowercase letter</li>
-            <li className={passwordStrength.hasNumber ? styles.valid : styles.invalid}>Has a number</li>
-            <li className={passwordStrength.hasSpecialChar ? styles.valid : styles.invalid}>Has a special character (!@#$%^&*)</li>
-            {passwordStrength.hasForbiddenChar ? 
-            <li className={styles.invalid}>Contains forbidden character</li> :
-            <li></li>}
-            
-          </ul>
-        </div>
+            <ul>
+              <li className={passwordStrength.hasUpperCase ? styles.valid : styles.invalid}>Has an uppercase letter</li>
+              <li className={passwordStrength.hasLowerCase? styles.valid : styles.invalid}>Has a lowercase letter</li>
+              <li className={passwordStrength.hasNumber ? styles.valid : styles.invalid}>Has a number</li>
+              <li className={passwordStrength.hasSpecialChar ? styles.valid : styles.invalid}>Has a special character (!@#$%^&*)</li>
+              {passwordStrength.hasForbiddenChar ? 
+              <li className={styles.invalid}>Contains forbidden character</li> :
+              <li></li>}
+              
+            </ul>
+          </div>
 
-        {/*<div>
-          <label htmlFor="ppInput">
-            Profile Picture
-            <div className={styles.ppContainer}>
-              {ppReview ?
-                <Image src={ppReview} alt="Profile Preview" width={100} height={100} /> :
-                <Icon icon="ic:outline-plus" style={{ color: '#070100' }} />
-              }
-            </div>
-          </label>
-          <input
-            type="file"
-            accept=".png, .jpg, .gif"
-            {...register('profile_picture')}
-            onChange={onFileChange} // Custom file handler
-            style={{ display: 'none' }}
-            id="ppInput"
-          />
-          {profilePicError && <span>{profilePicError}</span>}
-        </div>*/}
+          {/*<div>
+            <label htmlFor="ppInput">
+              Profile Picture
+              <div className={styles.ppContainer}>
+                {ppReview ?
+                  <Image src={ppReview} alt="Profile Preview" width={100} height={100} /> :
+                  <Icon icon="ic:outline-plus" style={{ color: '#070100' }} />
+                }
+              </div>
+            </label>
+            <input
+              type="file"
+              accept=".png, .jpg, .gif"
+              {...register('profile_picture')}
+              onChange={onFileChange} // Custom file handler
+              style={{ display: 'none' }}
+              id="ppInput"
+            />
+            {profilePicError && <span>{profilePicError}</span>}
+          </div>*/}
 
-        <button type="submit" disabled={loading === true}>{loading === true? 'Signing up...' : 'Sign up'}</button>
-      </form>
-      <article>
-        <h3>Have an account?</h3>
-        <Link href='/signin'>
-          <button>Sign In</button>
-        </Link>
-      </article>
+          <button type="submit" disabled={loading === true}>{loading === true? 'Signing up...' : 'Sign up'}</button>
+        </form>
+        <article>
+          <h3>Have an account?</h3>
+          <Link href='/signin'>
+            <button>Sign In</button>
+          </Link>
+        </article>
+      </section>
     </main>
   )
 }
