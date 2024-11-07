@@ -11,6 +11,11 @@
     transform: translateX(-50%); /* Moves the element back by 50% of its width */
 }
 
+.navContainers {
+    border: none;
+    background-color: transparent;
+}
+
 .icon {
     width: 30px;
     height: 30px;

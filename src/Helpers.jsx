@@ -30,12 +30,24 @@ export const loadUserData = () => {
 export const checkSessionValidity = () => {
     const sessionDuration = 20 * 24 * 60 * 60 * 1000 //30d
     const sessionStart = localStorage.getItem('sessionStart')
-    console.log(Date.now() - sessionStart)
-    console.log(sessionDuration)
 
     if(!sessionStart || (Date.now() - sessionStart) >= sessionDuration) {
         localStorage.clear()
         return false
+    }
+    return true
+}
+
+export const validateImages = (file) => {
+
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif']
+    const maxSize = 2 * 1024 * 1024 //2mb
+
+    if (file && !allowedFileTypes.includes(file.type)) {
+      return 'Only png, jpg and gif formats are allowed'
+    }
+    if (file && file.size > maxSize) {
+      return 'File must not be larger than 2MB'
     }
     return true
 }

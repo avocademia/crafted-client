@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-const UserNav = () => {
+const AdminNav = () => {
 
   const [isMobile, setIsMobile] = useState(false)
 
@@ -18,7 +18,6 @@ const UserNav = () => {
 
         return window.removeEventListener('resize' , handleResize)
     }, [])
-
   
   return (
     <section className={styles.container}>
@@ -30,10 +29,10 @@ const UserNav = () => {
         <Link className={styles.navContainers} href='/'>
           <Icon icon="material-symbols-light:home" className={styles.icon}/>
         </Link>
-        <Link className={styles.navContainers} href='/user/cart'>
-          <Icon icon="solar:cart-bold" className={styles.icon}/>
+        <Link className={styles.navContainers} href='/contact'>
+          <Icon icon="carbon:phone-filled" className={styles.icon}/>
         </Link>
     </section>
   )
 }
-export default UserNav
+export default AdminNav

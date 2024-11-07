@@ -43,20 +43,6 @@ const SignUp = () => {
     router.push('/signin')
   }
 
-  /*const validateFile = (file) => {
-
-    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif']
-    const maxSize = 2 * 1024 * 1024 //2mb
-
-    if (file && !allowedFileTypes.includes(file.type)) {
-      return 'Only png, jpg and gif formats are allowed'
-    }
-    if (file && file.size > maxSize) {
-      return 'File must not be larger than 2MB'
-    }
-    return true
-  }*/
-
   const validatePassword = (password) => {
 
     const hasUpperCase = /[A-Z]/.test(password)

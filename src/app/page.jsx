@@ -15,7 +15,7 @@ const Home = () => {
               <p className={styles.heroText}>shop</p>
             </div>
           </Link>
-          <Link href='/closets' className={styles.heroLink}>
+          <Link href='/klosets' className={styles.heroLink}>
             <div className={styles.wrapper}>
               <div className={styles.overlay}/>
               <Image src='/closets.jpg' width={300} height={300} className={styles.image} alt="closets"/> 

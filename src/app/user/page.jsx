@@ -24,7 +24,6 @@ const User = () => {
   useEffect(() => {
     setIsMounted(true)
     const sessionIsValid = checkSessionValidity()
-    console.log(sessionIsValid)
     
     if (!sessionIsValid) {
       router.push('/signin')
@@ -33,25 +32,21 @@ const User = () => {
     }
 
     const userData = loadUserData()
-    console.log('user data',userData)
+
     if (userData) {
       setUser(userData)
     } else {
       router.push('/signin')
       toast.error('User data not found', { hideProgressBar: true })
     }
-
-    console.log('user',user)
-
   }, [router])
 
-  // Prevent render until user data is loaded
   if (!isMounted || !user) return <p>Loading...</p>
 
   return (
     <section>
-      <UserNav/>
-        <main>
+        <UserNav/>
+        <main className={styles.main}>
           <article className={styles.userDetails}>
             <h1>Hi, {user.firstName}</h1>
             <Image src={`/user.png`} width={80} height={80} alt="Profile picture" />

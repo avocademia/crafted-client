@@ -53,3 +53,8 @@ export const signOutUser = async () => {
         toast.error('An error occured signing out. Please let us know if it happens again')
     }
 }
+
+export const fetchUsers = () => {
+    
+    
+}

@@ -12,7 +12,7 @@ import AuthNav from '@/components/navbars/AuthNav'
 import { Icon } from '@iconify/react'
 
 const SignIn = () => {
-  const {handleSubmit, register, formState: {error}, reset} = useForm()
+  const {handleSubmit, register, formState: {errors}, reset} = useForm()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -50,6 +50,7 @@ const SignIn = () => {
           <div className={styles.fieldContainer}>
             <label>email/username</label>
             <input type="text" {...register('identifier', {required: 'email or username is required'})} />
+            {errors.identifier && <span>{errors.identifier}</span>} 
           </div>
           <div className={styles.fieldContainer}>
             <label>password</label>

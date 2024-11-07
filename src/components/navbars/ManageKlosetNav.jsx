@@ -3,8 +3,10 @@ import Image from 'next/image'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useRouter} from 'next/navigation'
 
-const UserNav = () => {
+const ManageKlosetNav = ({slug, hideSettingsButton}) => {
+  const router = useRouter()
 
   const [isMobile, setIsMobile] = useState(false)
 
@@ -20,6 +22,7 @@ const UserNav = () => {
     }, [])
 
   
+  
   return (
     <section className={styles.container}>
         {!isMobile && 
@@ -27,13 +30,15 @@ const UserNav = () => {
           <Image src='/logo.png' width={130} height={70} alt='logo'/>
          </Link>
         }
-        <Link className={styles.navContainers} href='/'>
-          <Icon icon="material-symbols-light:home" className={styles.icon}/>
-        </Link>
-        <Link className={styles.navContainers} href='/user/cart'>
-          <Icon icon="solar:cart-bold" className={styles.icon}/>
-        </Link>
+        <button className={styles.navContainers} onClick={() => router.back()} >
+          <Icon icon="icon-park-solid:back" className={styles.icon}/>
+        </button>
+        {!hideSettingsButton && 
+          <Link className={styles.navContainers} href={`/admin/${slug}/settings`}>
+            <Icon icon="ic:sharp-settings" className={styles.icon}/>
+          </Link>
+        }
     </section>
   )
 }
-export default UserNav
+export default ManageKlosetNav
