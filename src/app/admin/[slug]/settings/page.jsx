@@ -17,7 +17,6 @@ const klosetSettings = () => {
     const fetchKloset = async () => {
       const data = await fetchSingleKloset(slug)
       setKloset(data)
-      console.log('data:', data)
     }
     fetchKloset()
   })
