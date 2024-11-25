@@ -1,23 +1,24 @@
 'use client'
-import styles from './signin.module.css'
+import styles from './signin.module.scss'
 import {toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
-import { signInUser } from "@/api/User"
-import { storeUserData } from "@/Helpers"
+import { signInUser } from '../../../api/User'
+import { storeUserData } from '../../../Helpers'
 import Link from "next/link"
-import AuthNav from '@/components/navbars/AuthNav'
+import AuthNav from '../../../components/navbars/AuthNav'
 import { Icon } from '@iconify/react'
+import { SigninData } from '../../../Types'
 
 const SignIn = () => {
-  const {handleSubmit, register, formState: {errors}, reset} = useForm()
+  const {handleSubmit, register, formState: {errors}, reset} = useForm<SigninData>()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: SigninData) => {
 
     setLoading(true)
     try {
@@ -50,7 +51,9 @@ const SignIn = () => {
           <div className={styles.fieldContainer}>
             <label>email/username</label>
             <input type="text" {...register('identifier', {required: 'email or username is required'})} />
-            {errors.identifier && <span>{errors.identifier}</span>} 
+            {errors.identifier && typeof errors.identifier.message === 'string' && (
+              <span>{errors.identifier.message}</span>
+            )}
           </div>
           <div className={styles.fieldContainer}>
             <label>password</label>

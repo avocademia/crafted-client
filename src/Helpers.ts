@@ -1,11 +1,14 @@
-export const storeUserData = (userData) => {
-    localStorage.setItem('userId', userData.id)
+import { User } from "./Types"
+
+export const storeUserData = (userData: User) => {
+    
+    localStorage.setItem('userId', String(userData.id))
     localStorage.setItem('username', userData.username)
     localStorage.setItem('firstName', userData.first_name)
     localStorage.setItem('profilePic', userData.profile_picture)
     localStorage.setItem('role', userData.role)
-    localStorage.setItem('authenticated', userData.authenticated)
-    localStorage.setItem('sessionStart', Date.now())
+    localStorage.setItem('authenticated', String(userData.authenticated))
+    localStorage.setItem('sessionStart', String(Date.now()))
 }
 
 export const loadUserData = () => {
@@ -27,9 +30,9 @@ export const loadUserData = () => {
         return user
 }
 
-export const checkSessionValidity = () => {
+export const checkSessionValidity = ():boolean => {
     const sessionDuration = 20 * 24 * 60 * 60 * 1000 //30d
-    const sessionStart = localStorage.getItem('sessionStart')
+    const sessionStart = parseInt(localStorage.getItem('sessionStart')?? '0', 10)
 
     if(!sessionStart || (Date.now() - sessionStart) >= sessionDuration) {
         localStorage.clear()
@@ -38,7 +41,7 @@ export const checkSessionValidity = () => {
     return true
 }
 
-export const validateImages = (file) => {
+export const validateImages = (file: File): boolean|string => {
 
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif']
     const maxSize = 2 * 1024 * 1024 //2mb

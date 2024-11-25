@@ -16,12 +16,15 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "react-select": "^5.8.2",
-    "react-toastify": "^10.0.6"
+    "react-toastify": "^10.0.6",
+    "sass": "^1.81.0"
   },
   "devDependencies": {
     "@iconify/react": "^5.0.2",
-    "@types/react": "^18.3.11",
+    "@types/node": "^22.9.4",
+    "@types/react": "^18.3.12",
     "eslint": "^8",
-    "eslint-config-next": "14.2.7"
+    "eslint-config-next": "14.2.7",
+    "typescript": "^5.7.2"
   }
 }

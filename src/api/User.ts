@@ -1,8 +1,9 @@
 import axios from "axios"
 import { toast } from "react-toastify"
+import { SigninData, ErrorData, SignupData } from "../Types"
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
 
-export const signInUser = async (data) => {
+export const signInUser = async (data: SigninData) => {
 
     try {
         const response = await axios.post(`${serverUrl}/api/users/signin`,
@@ -11,14 +12,17 @@ export const signInUser = async (data) => {
                                          )
         const user = response.data.user
         return user  
-    } catch (error) {
+    } catch (error: ErrorData) {
+        if (error === undefined) {
+            toast.error('an error occured', {hideProgressBar: true})
+        }
         const err =error.response.data.message
         toast.error(err, {hideProgressBar: true})
         return err
     }
 }
 
-export const signUpUser = async (data) => {
+export const signUpUser = async (data: SignupData) => {
     try {   
 
         /*const formData = new FormData()

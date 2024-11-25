@@ -1,27 +1,28 @@
 'use client'
 
 import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react"
+import { useEffect, useState, ChangeEvent } from "react"
 import { Icon } from "@iconify/react"
-import styles from './addKloset.module.css'
+import styles from './addKloset.module.scss'
 import Image from "next/image"
-import { addKloset } from "@/api/Admin"
+import { addKloset } from "../../../api/Admin"
 import { toast, ToastContainer } from "react-toastify"
 import { useRouter } from "next/navigation"
+import {KlosetFormData } from "../../../Types"
 
 const AddKloset = () => {
 
-  const {handleSubmit, register, formState: {errors} , reset} = useForm()
+  const {handleSubmit, register, formState: {errors} , reset} = useForm<KlosetFormData>()
   const [delivery, setDelivery] = useState(false)
-  const [user,setUser] = useState()
+  const [user,setUser] = useState<number>()
   const [profilePicError, setProfilePicError] = useState('')
-  const [ppReview, setPPReview] = useState(null)
+  const [ppReview, setPPReview] = useState<string|null>()
   const [loading, setLoading] = useState(false)
   const [selectedType, setType] = useState('')
   const router = useRouter()
 
   const userId = () => {
-    const id = localStorage.getItem('userId')
+    const id = parseInt(localStorage.getItem('userId') ?? '0', 10)
     setUser(id)
   }
  
@@ -29,20 +30,20 @@ const AddKloset = () => {
     userId()
   }, [])
 
-  const handleDeliveryState = (e) => {
-    setDelivery(e.target.value)
-    console.log(e.target.value)
+  const handleDeliveryState = (e: ChangeEvent<HTMLInputElement>) => {
+    setDelivery(e.target.value? true: false)
   }
 
-  const handleSelectedType = (e) => {
+  const handleSelectedType = (e: ChangeEvent<HTMLSelectElement>) => {
       setType(e.target.value)
   }
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: KlosetFormData) => {
 
     setLoading(true)
     const address = `${data.shopNo}, ${data.building}, ${data.street}`
-    const dp = document.getElementById('ppInput').files
+    const inputElement = document.getElementById('ppInput') as HTMLInputElement | null;
+    const dp = inputElement?.files? inputElement.files[0] : null
 
     const klosetData = {
       data,
@@ -50,8 +51,6 @@ const AddKloset = () => {
       user,
       dp
     }
-
-    console.log(klosetData)
 
     try {
       
@@ -66,7 +65,7 @@ const AddKloset = () => {
     }
   }
 
-  const validateFile = (file) => {
+  const validateFile = (file: File) => {
 
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif']
     const maxSize = 2 * 1024 * 1024 //2mb
@@ -80,18 +79,23 @@ const AddKloset = () => {
     return true
   }
 
-  const onFileChange = (e) => {
-    const file = e.target.files[0]
-    const noError = validateFile(file)
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0 ) {
+      setProfilePicError('np dp set')
+      setPPReview(null)
+      return
+    }
+    const noError = validateFile(files[0])
     setProfilePicError(noError === true ? '' : noError)
 
-    if (file && noError === true) {
+    if (files[0] && noError === true) {
 
       const reader = new FileReader()
       reader.onload = () => {
-        setPPReview(reader.result)
+        setPPReview(typeof reader.result === 'string'? reader.result: null)
       }
-      reader.readAsDataURL(file)
+      reader.readAsDataURL(files[0])
 
     } else {
       setPPReview(null)
@@ -123,12 +127,16 @@ const AddKloset = () => {
         <div>
           <label>name</label>
           <input type="text" {...register('name', {required: 'Kloset name required'})} />
-          {errors.name && <span>{errors.name}</span>}
+          {(errors.name && typeof errors.name.message === 'string') && 
+            <span>{errors.name.message}</span>
+          }
         </div>
         <div>
           <label>slogan</label>
           <input type="text" {...register('slogan')}/>
-          {errors.slogan && <span>{errors.slogan}</span>}
+          {(errors.slogan && typeof errors.slogan.message === 'string')&& 
+            <span>{errors.slogan.message}</span>
+          }
         </div>
         <div>
           <label>type</label>
@@ -139,7 +147,9 @@ const AddKloset = () => {
             <option value="digital">digital</option>
             <option value="books">books</option>
           </select>
-          {errors.type && <span>{errors.type}</span>}
+          {(errors.type && typeof errors.type.message === 'string')&& 
+            <span>{errors.type.message}</span>
+          }
         </div>
         { (selectedType === 'retail' || selectedType === 'custom') &&
           <div>
@@ -151,7 +161,9 @@ const AddKloset = () => {
               <option value="shoes">shoes</option>
               <option value="decor">decor</option>
             </select>
-            {errors.category && <span>{errors.category}</span>}
+            {(errors.category && typeof errors.category.message === 'string' )&& 
+              <span>{errors.category.message}</span>
+            }
           </div>
         }
         {selectedType !== 'digital' &&
@@ -161,7 +173,7 @@ const AddKloset = () => {
               <input type="text" {...register('shopNo')}/>
             </div>
             <div>
-              <label>bulding</label>
+              <label>building</label>
               <input type="text" {...register('building')}/>
             </div>
             <div>
