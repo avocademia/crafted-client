@@ -1,8 +1,9 @@
 'use client'
 
-import { fetchSingleProduct } from "@/api/Admin"
+import { fetchSingleProduct } from "../../../../api/Admin"
 import { useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { Product } from "../../../../Types"
 
 const adminProductPage = () => {
   const params = useParams()
@@ -10,11 +11,11 @@ const adminProductPage = () => {
   const {subSlug} = params
   const type = searchParams.get('type')
   const queryParams = {type: type,product_id: subSlug}
-  const [product, setProduct] = useState({name: 'name'})
+  const [product, setProduct] = useState<Product>()
 
   const fetchProduct = async () => {
       const data = await fetchSingleProduct(queryParams)
-      const response = Object.values(data)
+      const response: Product[] = Object.values(data)
       setProduct(response[0])
   }
 
@@ -23,6 +24,10 @@ const adminProductPage = () => {
       fetchProduct()
     }
   }, [type, subSlug]) 
+
+  if (product === undefined) {
+    return <main>Product not found</main>
+  }
 
   return (
     <main>

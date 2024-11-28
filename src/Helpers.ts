@@ -1,6 +1,6 @@
-import { User } from "./Types"
+import { Role, UserData } from "./Types"
 
-export const storeUserData = (userData: User) => {
+export const storeUserData = (userData: UserData) => {
     
     localStorage.setItem('userId', String(userData.id))
     localStorage.setItem('username', userData.username)
@@ -12,20 +12,24 @@ export const storeUserData = (userData: User) => {
 }
 
 export const loadUserData = () => {
-        const userId = localStorage.getItem('userId')
+        const id = localStorage.getItem('userId')
         const username = localStorage.getItem('username')
-        const firstName = localStorage.getItem('firstName')
-        const profilePic = localStorage.getItem('profilePic')
-        const userAuthenticated = localStorage.getItem('authenticated')
-        const userRole = localStorage.getItem('role')
+        const first_name = localStorage.getItem('firstName')
+        const profile_picture = localStorage.getItem('profilePic')
+        const authenticated = localStorage.getItem('authenticated')
+        const role = localStorage.getItem('role')
+        
+        if (!id || !username || !first_name || !profile_picture || !authenticated || !role) {
+            return null; // Return null if any essential data is missing
+        }
 
         const user = {
-            userId,
-            username,
-            firstName,
-            profilePic,
-            userAuthenticated,
-            userRole
+            id: Number(id),
+            username: username,
+            first_name: first_name,
+            profile_picture: profile_picture,
+            authenticated: authenticated === 'true',
+            role: role as Role,
         }
         return user
 }

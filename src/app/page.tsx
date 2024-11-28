@@ -1,7 +1,7 @@
-import HomeNavbar from "@/components/navbars/HomeNavbar"
+import HomeNavbar from "../components/navbars/HomeNavbar"
 import Link from "next/link"
 import Image from "next/image"
-import styles from './home.module.css'
+import styles from './home.module.scss'
 
 const Home = () => {
   return (

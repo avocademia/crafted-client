@@ -1,9 +1,10 @@
 import { Icon } from "@iconify/react"
 import Image from "next/image"
-import styles from './UserCard.module.css'
-import { changeRole } from "@/api/Admin"
+import styles from './UserCard.module.scss'
+import { changeRole } from "../../../../api/Admin"
+import { User } from "../../../../Types"
 
-const UserCard = ({username,number,role,id}) => {
+const UserCard = ({username,whatsapp_number,role,id}: User) => {
 
   const handleRoleChange = async () => {
     const confirmChange = window.confirm(`Are you sure you want to change @${username}'s role?`)
@@ -21,7 +22,7 @@ const UserCard = ({username,number,role,id}) => {
         <div className={styles.textContainer}>
           <h4>@{username}</h4>
           <button onClick={() => handleRoleChange()} >{role}</button>
-          <a href={`https://wa.me/${number}`} target="_blank" >
+          <a href={`https://wa.me/${whatsapp_number}`} target="_blank" >
             <Icon icon="ic:baseline-whatsapp"/>
           </a>
         </div>

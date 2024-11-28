@@ -1,25 +1,33 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import styles from './admin.module.css'
-import AdminNav from '@/components/navbars/AdminNav'
+import styles from './admin.module.scss'
+import AdminNav from '../../components/navbars/AdminNav'
 import KlosetCard from './components/kloset card/KlosetCard'
 import UserCard from './components/user card/UserCard'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
-import { fetchKlosets, fetchUsers, verifyFirstAdmin } from '@/api/Admin'
+import { fetchKlosets, fetchUsers, verifyFirstAdmin } from '../../api/Admin'
+import { Kloset, UserData } from '../../Types'
+
+interface Displays {
+  label: string,
+  icon: string,
+  content: JSX.Element
+}
 
 const admin = () => {
 
     const [isMobile, setIsMobile] = useState(false)
-    const [activeSection, setActiveSection] = useState('overview')
+    const [activeSection, setActiveSection] = useState<keyof typeof displays>('overview')
     const [isFirstAdmin, setFirstAdmin] = useState(false)
-    const [users, setUsers] = useState([])
-    const [klosets, setKlosets] = useState([])
+    const [users, setUsers] = useState<UserData[]>([])
+    const [klosets, setKlosets] = useState<Kloset[]>([])
 
-    const displays = {
+
+    const displays: Record<string, Displays> = {
         overview: {
           label: 'Overview',
           icon: "material-symbols:dashboard",
@@ -76,7 +84,16 @@ const admin = () => {
               content: 
                   <div className={styles.displayContainers}>
                     {users.map((user, index) => 
-                      (<UserCard key={index} username={user.username} number={user.whatsapp_number} role={user.role} id={user.id} />))
+                      (<UserCard 
+                          key={index} 
+                          username={user.username} 
+                          whatsapp_number={user.whatsapp_number} 
+                          role={user.role} 
+                          id={user.id} 
+                          first_name={user.first_name}
+                          profile_picture={user.profile_picture}
+                          authenticated={user.authenticated}
+                      />))
                     }
                   </div>,
           }
@@ -112,7 +129,7 @@ const admin = () => {
       setKlosets(data)
     }
 
-    const handleActiveSection = (key) => {
+    const handleActiveSection = (key:keyof typeof displays) => {
       setActiveSection(key)
       if (key === 'users') {
         displayUsers()

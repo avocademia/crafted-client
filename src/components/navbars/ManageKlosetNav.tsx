@@ -1,11 +1,16 @@
-import styles from './navbar.module.css'
+import styles from './navbar.module.scss'
 import Image from 'next/image'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter} from 'next/navigation'
 
-const ManageKlosetNav = ({slug, hideSettingsButton}) => {
+interface klosetNav {
+  slug: string|string[],
+  hideSettingsButton: boolean
+}
+
+const ManageKlosetNav: React.FC<klosetNav> = ({slug, hideSettingsButton}) => {
   const router = useRouter()
 
   const [isMobile, setIsMobile] = useState(false)

@@ -1,10 +1,10 @@
 'use client'
 
-import ManageKlosetNav from "@/components/navbars/ManageKlosetNav"
+import ManageKlosetNav from "../../../../components/navbars/ManageKlosetNav"
 import { usePathname, useParams } from "next/navigation"
-import styles from './klosetSettings.module.css'
+import styles from './klosetSettings.module.scss'
 import { useState, useEffect } from "react"
-import { fetchSingleKloset } from "@/api/Admin"
+import { fetchSingleKloset } from "../../../../api/Admin"
 
 const klosetSettings = () => {
   const [kloset,setKloset] = useState()
@@ -23,7 +23,7 @@ const klosetSettings = () => {
 
   return (
     <main className={styles.main} >
-      <ManageKlosetNav hideSettingsButton={hideSettingsButton} />
+      <ManageKlosetNav hideSettingsButton={hideSettingsButton} slug={slug} />
       <section className={styles.mainSection}>
         <h1>settings</h1>
       </section>

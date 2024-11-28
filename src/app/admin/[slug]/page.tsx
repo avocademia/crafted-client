@@ -1,21 +1,22 @@
 'use client'
 
-import ManageKlosetNav from "@/components/navbars/ManageKlosetNav"
+import ManageKlosetNav from "../../../components/navbars/ManageKlosetNav"
 import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
-import styles from './manageKlosets.module.css'
+import styles from './manageKlosets.module.scss'
 import { useState, useEffect, use } from "react"
 import { Icon } from "@iconify/react"
-import { fetchProductsByKloset, fetchSingleKloset } from "@/api/Admin"
-import RetailProductCard from "./components/retailProductCard"
+import { fetchProductsByKloset, fetchSingleKloset } from "../../../api/Admin"
+import RetailProductCard from "./components/RetailProductCard"
 import CustomProductCard from "./components/CustomProductCard"
 import DigitalProductCard from "./components/DigitalProductCard"
 import BookCard from "./components/BookCard"
+import { Product } from "../../../Types"
 
 const manageKloset = () => {
   const params = useParams()
   const {slug} = params
-  const [productList, setProducts] = useState([])
+  const [productList, setProducts] = useState<Product[]>([])
   const [type, setType] = useState()
 
   useEffect(() => {
@@ -30,12 +31,12 @@ const manageKloset = () => {
   const fetchKloset = async () => {
     const data = await fetchSingleKloset(slug)
     setType(data[0].type)
-    fetchProducts(slug,type)
+    fetchProducts()
   }
 
   return (
     <main className={styles.main}>
-        <ManageKlosetNav slug={slug}/>
+        <ManageKlosetNav slug={slug} hideSettingsButton={false}/>
         <section className={styles.productsSection}>
           <article className={styles.topProductSection} >
             <h1>Products</h1>

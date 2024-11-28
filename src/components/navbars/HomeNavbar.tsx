@@ -1,6 +1,6 @@
 "use client"
 
-import styles from './navbar.module.css'
+import styles from './navbar.module.scss'
 import Image from 'next/image'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 
 const HomeNavbar = () => {
 
-  const [role, setRole] = useState()
+  const [role, setRole] = useState<string|null>()
 
   useEffect (() => {
     const userRole = localStorage.getItem('role')

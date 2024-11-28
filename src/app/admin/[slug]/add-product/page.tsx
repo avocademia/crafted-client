@@ -1,19 +1,19 @@
 'use client'
 
-import ManageKlosetNav from "@/components/navbars/ManageKlosetNav"
+import ManageKlosetNav from '../../../../components/navbars/ManageKlosetNav'
 import styles from './products.module.css'
 import { usePathname, useParams } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { useEffect, useState } from "react"
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
+import { useEffect, useState, ChangeEvent } from "react"
 import { Icon } from "@iconify/react"
 import Image from "next/image"
-import Select from "react-select"
-import { validateImages } from "@/Helpers"
-import { fetchSingleKloset } from "@/api/Admin"
-import { addProduct, deleteDigitalFile, saveDigitalProduct } from "@/api/Admin"
+import Select,  { MultiValue, ActionMeta } from "react-select"
+import { validateImages } from '../../../../Helpers'
+import { addProduct, deleteDigitalFile, saveDigitalProduct, fetchSingleKloset } from '../../../../api/Admin'
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from "next/navigation"
+import { Genre, ProductFormData } from '../../../../Types'
 
 const addProductPage = () => {
   const router = useRouter()
@@ -22,13 +22,13 @@ const addProductPage = () => {
   const pathname = usePathname()
   const hideSettingsButton = pathname?.includes('/add-product')
   const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm()
-  const [photoReviews, setPhotoReviews] = useState([null, null, null, null])
-  const [photoErrors, setPhotoErrors] = useState([null, null, null, null])
+  const [photoReviews, setPhotoReviews] = useState<(string|ArrayBuffer|null)[]>([null, null, null, null])
+  const [photoErrors, setPhotoErrors] = useState<(string|null|false)[]|string>()
   const [quantity, setQuantity] = useState(1)
   const [kloset, setKloset] = useState()
   const [selectedCategory, setSelectedCategory] = useState()
   const [selectedType, setSelectedType] = useState()
-  const [digitalFileError, setDigitalFileError] = useState()
+  const [digitalFileError, setDigitalFileError] = useState<string|null>()
   const [currentFilePath, setCurrentFilePath] = useState()
 
   const genreOptions = [
@@ -90,30 +90,48 @@ const addProductPage = () => {
       fetchKloset()
   }, [currentFilePath])
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     addProduct(data, slug)
     reset()
     router.back()
   }
 
-  const onFileChange = (e, index) => {
-    const file = e.target.files[0]
-    const error = validateImages(file)
-    setPhotoErrors(error === true ? '' : error)
+  interface OnFileChangeProps {
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  }
 
-      if (file && error === true) {
+  const onFileChange = ({e, index}: OnFileChangeProps) => {
+    const target = e.target as HTMLInputElement; 
+
+    if (!target.files || target.files.length === 0) {
+      setPhotoErrors('No Images Detected')
+      return
+    }
+
+    const error = validateImages(target.files[0])
+    setPhotoErrors(error === true ? '' : 'Image validation error')
+
+      if (target.files[0] && error === true) {
           const reader = new FileReader()
           reader.onloadend = () => {
               const newPhotoReviews = [...photoReviews]
-              newPhotoReviews[index] = reader.result
-              setPhotoReviews(newPhotoReviews)
+              if (typeof newPhotoReviews[index] === 'string') {
+                newPhotoReviews[index] = reader.result
+                setPhotoReviews(newPhotoReviews)
+              }
           }
-          setValue(`product_photo_${index + 1}`, file)
-      reader.readAsDataURL(file)
+          setValue(`product_photo_${index + 1}`, target.files[0])
+      reader.readAsDataURL(target.files[0])
     }
   }
 
-  const onGenreChange = (selectedOptions) => {
+  interface SelectedOption {
+    field: string,
+    value: string
+  }
+
+  const onGenreChange = (selectedOptions: MultiValue<{value: string, label: string}>) => {
       const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : []
       setValue('genres', selectedValues)
   }
@@ -134,26 +152,31 @@ const addProductPage = () => {
     })
   }
 
-  const handleQuantityChange = (e) => {
+  const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Math.max(parseInt(e.target.value))
     setQuantity(value)
     setValue('quantity', value)
   }
 
-  const onDigitalFileChange = async (e) => {
-    const file = e.target.files[0]
-    const maxSize = 50 * 1024 * 1024 // 50MB
+  const onDigitalFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement
 
-    if (file && file.size > maxSize) {
+    if (!target.files || target.files.length === 0) {
+      setDigitalFileError('No file detected')
+      return
+    }
+    const maxSize = 50 * 1024 * 1024 // 50MB
+    if (target.files[0] && target.files[0].size > maxSize) {
       setDigitalFileError("File size should be less than 50MB.")
     } else {
       if (currentFilePath) {
-        console.log('deleted:', currentFilePath)
         deleteDigitalFile(currentFilePath)
       }
       setDigitalFileError(null)
-      const path = await saveDigitalProduct(file)
-      console.log('path:', path)
+      const path = await saveDigitalProduct(target.files[0])
+      if (!path) {
+        return setDigitalFileError('file path not received')
+      }
       setCurrentFilePath(path.data.path)
       setValue('path', path.data.path)
     }
@@ -161,14 +184,16 @@ const addProductPage = () => {
 
   return (
     <main className={styles.main}>
-        <ManageKlosetNav hideSettingsButton={hideSettingsButton}/>
+        <ManageKlosetNav hideSettingsButton={hideSettingsButton} slug={slug}/>
         <ToastContainer/>
         <section className={styles.mainSection}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.fieldContainer}>
               <label>name</label>
               <input type="text" {...register('name', {required: 'name is required'})} />
-              {errors.name && <span>{errors.name}</span>} 
+              {(errors.name && typeof errors.name.message === 'string' ) && 
+                <span>{errors.name.message}</span>
+              } 
             </div>
             {selectedType === 'books' && 
               <div className={styles.fieldContainer}>
@@ -189,7 +214,9 @@ const addProductPage = () => {
                   className={styles.costInput} 
                 />
               </div>
-              {errors.cost && <span>{errors.cost}</span>} 
+              {(errors.cost && typeof errors.cost.message === 'string')&& 
+                <span>{errors.cost.message}</span>
+              } 
             </div>
             {selectedType === 'custom' &&
               <div className={styles.fieldContainer}>
@@ -310,27 +337,34 @@ const addProductPage = () => {
                 <div key={index}>
                   <label htmlFor={`photoInput${index}`}> 
                     <div className={styles.photoContainer}>
-                      {photoReviews[index - 1] ? (
-                        <Image
-                          src={photoReviews[index - 1]}
-                          alt={`Photo ${index} Preview`}
-                          width={100}
-                          height={100}
-                        />
-                      ) : (
-                        <Icon icon="ic:outline-plus" style={{ color: '#070100' }} />
-                      )}
+                      {photoReviews.map((src, index) => {
+                        if (typeof src === 'string') {
+                          return (
+                            <Image 
+                              key={index}
+                              src={src}
+                              alt={`Product Image ${index + 1}`}
+                              width={500}
+                              height={500}
+                            />
+                          )
+                        } else {
+                          return (
+                            <Icon icon="ic:outline-plus" style={{ color: '#070100' }} />
+                          )
+                        }
+                      })}
                     </div>
                   </label>
                   <input
                     type="file"
                     accept=".png, .jpg, .gif"
                     {...register(`product_photo_${index}`)}
-                    onChange={(e) => onFileChange(e, index - 1)}
+                    onChange={(e) => onFileChange({e, index:index - 1})}
                     style={{ display: 'none' }}
                     id={`photoInput${index}`}
                   />
-                  {photoErrors[index - 1] && <span>{photoErrors[index - 1]}</span>}
+                  {photoErrors? photoErrors[index - 1] && <span>{photoErrors[index - 1]}</span> : <></>}
                 </div>
               ))}
             </div>

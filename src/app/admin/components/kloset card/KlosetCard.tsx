@@ -1,10 +1,14 @@
 import Image from 'next/image'
-import styles from './KlosetCard.module.css'
+import styles from './KlosetCard.module.scss'
 import dotenv from 'dotenv'
+import { Kloset } from '../../../../Types'
 
 dotenv.config()
+interface KlosetCardProps {
+  kloset: Kloset
+}
 
-const KlosetCard = ({kloset}) => {
+const KlosetCard = ({kloset}: KlosetCardProps) => {
   const {name, type, followers, dp} = kloset
   const serverURL = process.env.NEXT_PUBLIC_SERVER_URL
   //{`${serverURL}/${dp}`}

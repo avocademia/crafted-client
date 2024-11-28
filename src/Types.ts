@@ -1,13 +1,13 @@
 export type Role = 'user'|'admin'
 
-export type User = {
+export type UserData = {
     id: number,
     first_name: string,
     username: string,
-    profile_picture: string,
     role: Role,
     authenticated: boolean,
-
+    whatsapp_number?: string,
+    profile_picture: string,
 }
 
 export type SigninData = {
@@ -32,13 +32,6 @@ export type ErrorData = {
     }
 } | any
 
-export type E = {
-    target: {
-      value: string,
-      files: FileList|null
-    },
-}
-
 export type KlosetType = 'retail'|'custom'|'digital'|'books'
 
 export type KlosetFormData = {
@@ -57,5 +50,47 @@ export type KlosetData = {
     data: KlosetData,
     address: string|undefined,
     user: number,
-    dp: File|null
+    dp: File|null,
+}
+
+export type Kloset = {
+    id: number,
+    name: string,
+    slogan: string,
+    dp: string,
+    type: KlosetType,
+    followers: UserData[]
+}
+
+export type Category = 'apparel'|'jewellery'|'shoes'|'decor'|'digital'|'books'
+export type Condition = 'brand new'|'used'|'thrifted'
+export type Genre = 'fiction'|'non-fiction'|'fantasy'|'mystery'|'sci-fi'
+
+export type ProductFormData = {
+    name: string,
+    author?: string,
+    cost: number,
+    production_time? : number,
+    quantity?: number,
+    category?: Category,
+    sub_category?: string,
+    condition?: Condition,
+    genres: Genre[]
+    path: string
+}
+
+export type Product = {
+    id: number,
+    name: string,
+    author?: string,
+    description?: string,
+    summary?: string,
+    cost: number,
+    category?: Category,
+    sub_category?: string,
+    condition?: Condition,
+    genres: Genre[],
+    path: string,
+    quantity?: number,
+    sold_out: boolean
 }
