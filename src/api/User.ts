@@ -1,6 +1,6 @@
 import axios from "axios"
 import { toast } from "react-toastify"
-import { SigninData, ErrorData, SignupData } from "../Types"
+import { SigninData,ErrorData, SignupData, UserData } from "../Types"
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
 
 export const signInUser = async (data: SigninData) => {
@@ -10,15 +10,10 @@ export const signInUser = async (data: SigninData) => {
                                             data, 
                                            {withCredentials: true}
                                          )
-        const user = response.data.user
+        const user:UserData = response.data.user
         return user  
-    } catch (error: ErrorData) {
-        if (error === undefined) {
-            toast.error('an error occured', {hideProgressBar: true})
-        }
-        const err =error.response.data.message
-        toast.error(err, {hideProgressBar: true})
-        return err
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error)
     }
 }
 
@@ -43,8 +38,8 @@ export const signUpUser = async (data: SignupData) => {
         }*/
         await axios.post(`${serverUrl}/api/users/signup`, data)
         toast.info('Account succesfully created', {hideProgressBar: true})
-    } catch (error) {
-        toast.error('An error occured pleasr try again later')
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
@@ -53,12 +48,7 @@ export const signOutUser = async () => {
     try {
         localStorage.clear()
         await axios.post(`${serverUrl}/api/users/signout`,{}, {withCredentials: true})
-    } catch (error) {
-        toast.error('An error occured signing out. Please let us know if it happens again')
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
-}
-
-export const fetchUsers = () => {
-    
-    
 }

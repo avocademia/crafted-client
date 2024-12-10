@@ -3,27 +3,32 @@
 import { fetchSingleProduct } from "../../../../api/Admin"
 import { useParams, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import { Product } from "../../../../Types"
+import { KlosetType, Product } from "../../../../Types"
+import { ToastContainer } from "react-toastify"
 
 const adminProductPage = () => {
   const params = useParams()
   const searchParams = useSearchParams()
   const {subSlug} = params
-  const type = searchParams.get('type')
-  const queryParams = {type: type,product_id: subSlug}
+  const type = searchParams.get('type') as KlosetType
   const [product, setProduct] = useState<Product>()
 
-  const fetchProduct = async () => {
-      const data = await fetchSingleProduct(queryParams)
-      const response: Product[] = Object.values(data)
-      setProduct(response[0])
-  }
+  if (type && typeof subSlug === 'string') {
 
-  useEffect(() => {
-    if (type && subSlug) {
-      fetchProduct()
+    const queryParams = {type: type,product_id: parseInt(subSlug)}
+
+    const fetchProduct = async () => {
+        const data = await fetchSingleProduct(queryParams)
+        if (data) {
+          const response: Product[] = Object.values(data)
+          setProduct(response[0])
+        }    
     }
-  }, [type, subSlug]) 
+
+    useEffect(() => {
+      fetchProduct()
+    }, [])   
+  }
 
   if (product === undefined) {
     return <main>Product not found</main>
@@ -31,6 +36,7 @@ const adminProductPage = () => {
 
   return (
     <main>
+      <ToastContainer/>
       {type === 'retail' &&
         <article>
           <div>

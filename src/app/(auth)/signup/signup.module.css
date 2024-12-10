@@ -1,0 +1,18 @@
+.mainSection {
+  margin: 100px 0 0 0;
+}
+
+.ppContainer {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  background-color: blanchedalmond;
+}
+
+.valid {
+  color: green;
+}
+
+.invalid {
+  color: red;
+}/*# sourceMappingURL=signup.module.css.map */

@@ -13,13 +13,18 @@ const klosetSettings = () => {
   const {slug} = params
   const hideSettingsButton = pathname?.includes('/settings')
 
-  useEffect (() => {
-    const fetchKloset = async () => {
-      const data = await fetchSingleKloset(slug)
-      setKloset(data)
-    }
-    fetchKloset()
-  })
+  if (typeof slug === 'string') {
+
+    useEffect (() => {
+      const fetchKloset = async () => {
+        const data = await fetchSingleKloset(parseInt(slug))
+        setKloset(data)
+      }
+      fetchKloset()
+    }, [])
+
+  }
+
 
   return (
     <main className={styles.main} >

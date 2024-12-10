@@ -21,8 +21,8 @@ const addProductPage = () => {
   const {slug} = params
   const pathname = usePathname()
   const hideSettingsButton = pathname?.includes('/add-product')
-  const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm()
-  const [photoReviews, setPhotoReviews] = useState<(string|ArrayBuffer|null)[]>([null, null, null, null])
+  const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm<ProductFormData>()
+  const [photoReviews, setPhotoReviews] = useState<(string|ArrayBuffer)[]>([])
   const [photoErrors, setPhotoErrors] = useState<(string|null|false)[]|string>()
   const [quantity, setQuantity] = useState(1)
   const [kloset, setKloset] = useState()
@@ -31,12 +31,16 @@ const addProductPage = () => {
   const [digitalFileError, setDigitalFileError] = useState<string|null>()
   const [currentFilePath, setCurrentFilePath] = useState()
 
-  const genreOptions = [
-    { value: 'fiction', label: 'Fiction' },
-    { value: 'non-fiction', label: 'Non-Fiction' },
-    { value: 'fantasy', label: 'Fantasy' },
-    { value: 'mystery', label: 'Mystery' },
-    { value: 'sci-fi', label: 'Sci-Fi' },
+  type GenreOption = {
+    value: Genre,
+    label: Genre
+  }
+  const genreOptions: GenreOption[] = [
+    { value: 'fiction', label: 'fiction' },
+    { value: 'non-fiction', label: 'non-fiction' },
+    { value: 'fantasy', label: 'fantasy' },
+    { value: 'mystery', label: 'mystery' },
+    { value: 'sci-fi', label: 'sci-fi' },
   ]
 
   const apparelSubcategories = [
@@ -79,21 +83,33 @@ const addProductPage = () => {
     { value: 'other', label: 'other' },
   ]
 
-  useEffect(()=> {
+  if (slug === 'string') {
+
+    useEffect(()=> {
+
       const fetchKloset = async () => {
-        const data = await fetchSingleKloset(slug)
+        const data = await fetchSingleKloset(parseInt(slug))
         setSelectedCategory(data[0].category)
         setSelectedType(data[0].type)
         setValue('category', data[0].category)
         setValue('type', data[0].type)
       }
       fetchKloset()
-  }, [currentFilePath])
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    addProduct(data, slug)
-    reset()
-    router.back()
+    }, [])
+
+  }
+
+  
+
+  const onSubmit = async (data:ProductFormData) => {
+
+    if (typeof slug === 'string') {
+      addProduct(data, slug)
+      reset()
+      router.back()
+    }
+   
   }
 
   interface OnFileChangeProps {
@@ -116,22 +132,19 @@ const addProductPage = () => {
           const reader = new FileReader()
           reader.onloadend = () => {
               const newPhotoReviews = [...photoReviews]
-              if (typeof newPhotoReviews[index] === 'string') {
+              if (typeof newPhotoReviews[index] === 'string' && reader.result) {
                 newPhotoReviews[index] = reader.result
                 setPhotoReviews(newPhotoReviews)
               }
           }
-          setValue(`product_photo_${index + 1}`, target.files[0])
+          const photoIndex = index + 1
+          setValue(`product_photo_${photoIndex}`, target.files[0])
       reader.readAsDataURL(target.files[0])
     }
   }
 
-  interface SelectedOption {
-    field: string,
-    value: string
-  }
 
-  const onGenreChange = (selectedOptions: MultiValue<{value: string, label: string}>) => {
+  const onGenreChange = (selectedOptions: MultiValue<{value: Genre, label: string}>) => {
       const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : []
       setValue('genres', selectedValues)
   }
@@ -333,41 +346,44 @@ const addProductPage = () => {
             }
             <div className={styles.photosContainer}>
               <label>Product photos</label>
-              {[1, 2, 3, 4, 5].map((index) => (
-                <div key={index}>
-                  <label htmlFor={`photoInput${index}`}> 
-                    <div className={styles.photoContainer}>
-                      {photoReviews.map((src, index) => {
-                        if (typeof src === 'string') {
-                          return (
-                            <Image 
-                              key={index}
-                              src={src}
-                              alt={`Product Image ${index + 1}`}
+              {[1, 2, 3, 4, 5].map((index) => {
+                const fieldName = `product_photo_${index}`; // Dynamic field name
+                return (
+                  <div key={index}>
+                    <label htmlFor={`photoInput${index}`}>
+                      <div className={styles.photoContainer}>
+                        {photoReviews[index - 1] ? (
+                          typeof photoReviews[index - 1] === "string" ? (
+                            <Image
+                              src={typeof photoReviews ==='string'? photoReviews[index - 1] : ''}
+                              alt={`Product Image ${index}`}
                               width={500}
                               height={500}
                             />
+                          ) : (
+                            <Icon icon="ic:outline-plus" style={{ color: "#070100" }} />
                           )
-                        } else {
-                          return (
-                            <Icon icon="ic:outline-plus" style={{ color: '#070100' }} />
-                          )
-                        }
-                      })}
-                    </div>
-                  </label>
-                  <input
-                    type="file"
-                    accept=".png, .jpg, .gif"
-                    {...register(`product_photo_${index}`)}
-                    onChange={(e) => onFileChange({e, index:index - 1})}
-                    style={{ display: 'none' }}
-                    id={`photoInput${index}`}
-                  />
-                  {photoErrors? photoErrors[index - 1] && <span>{photoErrors[index - 1]}</span> : <></>}
-                </div>
-              ))}
+                        ) : (
+                          <Icon icon="ic:outline-plus" style={{ color: "#070100" }} />
+                        )}
+                      </div>
+                    </label>
+                    <input
+                      type="file"
+                      accept=".png, .jpg, .gif"
+                      {...register(fieldName as keyof ProductFormData)}
+                      onChange={(e) => onFileChange({ e, index: index - 1 })}
+                      style={{ display: "none" }}
+                      id={`photoInput${index}`}
+                    />
+                    {photoErrors && photoErrors[index - 1] && (
+                      <span>{photoErrors[index - 1]}</span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
+
             <button type="submit">Add</button>
           </form>
         </section>

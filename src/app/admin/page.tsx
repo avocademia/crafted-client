@@ -7,8 +7,6 @@ import KlosetCard from './components/kloset card/KlosetCard'
 import UserCard from './components/user card/UserCard'
 import { Icon } from '@iconify/react'
 import Link from 'next/link'
-import { ToastContainer } from "react-toastify"
-import 'react-toastify/dist/ReactToastify.css'
 import { fetchKlosets, fetchUsers, verifyFirstAdmin } from '../../api/Admin'
 import { Kloset, UserData } from '../../Types'
 
@@ -89,7 +87,6 @@ const admin = () => {
                           username={user.username} 
                           whatsapp_number={user.whatsapp_number} 
                           role={user.role} 
-                          id={user.id} 
                           first_name={user.first_name}
                           profile_picture={user.profile_picture}
                           authenticated={user.authenticated}
@@ -141,7 +138,6 @@ const admin = () => {
     }
   return (
     <main className={styles.main}>
-      <ToastContainer/>
       <AdminNav/>
       <section className={styles.mainSection }>
          {!isMobile && 

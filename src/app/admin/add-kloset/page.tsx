@@ -28,7 +28,7 @@ const AddKloset = () => {
  
   useEffect(() => {
     userId()
-  }, [])
+  },[])
 
   const handleDeliveryState = (e: ChangeEvent<HTMLInputElement>) => {
     setDelivery(e.target.value? true: false)

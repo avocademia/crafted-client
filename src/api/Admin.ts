@@ -1,22 +1,28 @@
 import axios from "axios"
 import { toast } from "react-toastify"
+import { ErrorData, KlosetData, KlosetFormData, KlosetType, ProductFormData, Role } from "../Types"
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
 
-export const addKloset = async (klosetData) => {
+interface APIKlosetFormData {
+    data: KlosetFormData,
+    address: string,
+    dp: File|null,
+}
+
+export const addKloset = async (klosetData:APIKlosetFormData) => {
 
     try {
 
         const formData = new FormData()
 
         formData.append('name', klosetData.data.name)
-        formData.append('user_id', klosetData.user)
         formData.append('slogan', klosetData.data.slogan)
         formData.append('type', klosetData.data.type)
-        formData.append('category', klosetData.data.category)
-        formData.append('delivery', klosetData.data.delivery)
+        formData.append('category', klosetData.data.category? klosetData.data.category: '')
+        formData.append('delivery', klosetData.data.delivery? 'true': 'false')
         formData.append('address', klosetData.address)
-        formData.append('delivery_time', klosetData.data.delivery_time)
-        formData.append('dp', klosetData.dp[0])
+        formData.append('delivery_time', klosetData.data.delivery_time? klosetData.data.delivery_time.toString(): '0')
+        formData.append('dp', klosetData.dp? klosetData.dp: '')
 
         /*for (const [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`);
@@ -29,8 +35,8 @@ export const addKloset = async (klosetData) => {
             withCredentials: true
         })
         
-    } catch (error) {
-        toast.error('An error occured adding kloset', {hideProgressBar: true})
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
@@ -39,8 +45,9 @@ export const verifyFirstAdmin = async () => {
     try {
         const response = await axios.get(`${serverUrl}/api/admins/verify-first-admin`, {withCredentials: true})
         return response.data.isFirstAdmin
-    } catch (error) {
-        throw error
+    } catch (error:ErrorData) {
+        console.log(error)
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
@@ -49,18 +56,18 @@ export const fetchUsers = async () => {
     try {
         const response = await axios.get(`${serverUrl}/api/admins/fetch-users`, {withCredentials: true})
         return response.data.users
-    } catch (error) {
-        toast.info('An error occured fetching users', {hideProgressBar: true})
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const changeRole = async (data) => {
+export const changeRole = async (data:Role) => {
 
     try {
         await axios.post(`${serverUrl}/api/admins/change-role`, data, {withCredentials: true})
         toast.info('Role change successful', {hideProgressBar: true})
-    } catch (error) {
-        toast.error('An error occured changing roles', {hideProgressBar: true})
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
@@ -69,28 +76,28 @@ export const fetchKlosets = async () => {
     try {
         const response = await axios.get(`${serverUrl}/api/admins/fetch-klosets`, {withCredentials: true})
         return response.data.klosets
-    } catch (error) {
-        toast.info('Error fetching your closets')
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const fetchSingleKloset = async (klosetId) => {
+export const fetchSingleKloset = async (klosetId:number) => {
 
     try {
         const response = await axios.get(`${serverUrl}/api/admins/kloset/${klosetId}`, {withCredentials: true})
         return response.data.kloset
-    } catch (error) {
-        throw error
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const addProduct = async (data, slug) => {
+export const addProduct = async (data:ProductFormData, slug:string) => {
 
     try {
         const formData = new FormData()
 
         formData.append('name', data.name)
-        formData.append('cost', data.cost)
+        formData.append('cost', data.cost.toString())
         formData.append('type', data.type)
         if (data.category) {
             formData.append('category', data.category)
@@ -113,10 +120,10 @@ export const addProduct = async (data, slug) => {
             })
         }
         if (data.production_time) {
-            formData.append('production_time', data.production_time)
+            formData.append('production_time', data.production_time.toString())
         }
         if (data.quantity) {
-            formData.append('quantity', data.quantity)
+            formData.append('quantity', data.quantity.toString())
         } 
         if (data.path) {
             formData.append('path', data.path)
@@ -145,13 +152,12 @@ export const addProduct = async (data, slug) => {
         }*/
         await axios.post(`${serverUrl}/api/admins/kloset/${slug}/add-product`, formData, {withCredentials: true})
         toast.info('Product added succesfully', {hideProgressBar: true})
-    } catch (error) {
-        console.log(error.response)
-        toast.error('An error occured adding product', {hideProgressBar: true})
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const saveDigitalProduct = async (file) => {
+export const saveDigitalProduct = async (file:File) => {
 
     try {
 
@@ -163,39 +169,43 @@ export const saveDigitalProduct = async (file) => {
             },
             withCredentials: true})
         return response
-    } catch (error) {
-        console.log(error)
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const deleteDigitalFile = async (path) => {
+export const deleteDigitalFile = async (path:string) => {
 
     try {
         await axios.post(`${serverUrl}/api/admins/delete-digital-product`, {path: path}, {withCredentials: true})
         toast.info('deleted successfuly iykyk')
-    } catch (error) {
-        console.log(error)
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const fetchProductsByKloset = async (kloset_id, type) => {
+export const fetchProductsByKloset = async (kloset_id:number, type:KlosetType) => {
 
     try {
         const response = await axios.get(`${serverUrl}/api/admins/kloset/${kloset_id}&${type}/products`, {withCredentials: true})
         return response.data.products
-    } catch (error) {
-        console.log(error)
-        throw error
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
-export const fetchSingleProduct = async (queryParams) => {
+interface fetchSingleProductProps{
+    type: KlosetType,
+    product_id: number
+}
+
+export const fetchSingleProduct = async (queryParams:fetchSingleProductProps) => {
     const {type, product_id} = queryParams
 
     try {
         const response = await axios.get(`${serverUrl}/api/admins/${product_id}&${type}`, {withCredentials: true})
         return response.data.product
-    } catch (error) {
-        throw error
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }

@@ -24,12 +24,14 @@ const SignIn = () => {
     try {
   
       const userData = await signInUser(data)
-      storeUserData(userData)
-      router.push('/')
-      reset()
-  
+      if (userData) {
+        storeUserData(userData)
+        router.push('/')
+        reset()
+      }
+
     } catch (error) {
-      toast.error('unexpected error occured logging in')
+      throw error
     } finally {
       setLoading(false)
     }

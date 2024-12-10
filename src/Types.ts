@@ -1,7 +1,6 @@
 export type Role = 'user'|'admin'
 
 export type UserData = {
-    id: number,
     first_name: string,
     username: string,
     role: Role,
@@ -27,7 +26,7 @@ export type SignupData = {
 export type ErrorData = {
     response: {
         data: {
-            message: string
+            error: string
         }
     }
 } | any
@@ -70,13 +69,17 @@ export type ProductFormData = {
     name: string,
     author?: string,
     cost: number,
+    type: KlosetType,
     production_time? : number,
     quantity?: number,
     category?: Category,
     sub_category?: string,
     condition?: Condition,
-    genres: Genre[]
-    path: string
+    genres: Genre[],
+    path: string,
+    description?: string,
+    summary?: string,
+    [key: `product_photo_${number}`]: File; 
 }
 
 export type Product = {

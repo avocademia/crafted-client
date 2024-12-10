@@ -2,36 +2,39 @@
 
 import ManageKlosetNav from "../../../components/navbars/ManageKlosetNav"
 import Link from "next/link"
-import { useParams, usePathname } from "next/navigation"
+import { useParams,} from "next/navigation"
 import styles from './manageKlosets.module.scss'
-import { useState, useEffect, use } from "react"
+import { useState, useEffect,} from "react"
 import { Icon } from "@iconify/react"
 import { fetchProductsByKloset, fetchSingleKloset } from "../../../api/Admin"
 import RetailProductCard from "./components/RetailProductCard"
 import CustomProductCard from "./components/CustomProductCard"
 import DigitalProductCard from "./components/DigitalProductCard"
 import BookCard from "./components/BookCard"
-import { Product } from "../../../Types"
+import { KlosetType, Product } from "../../../Types"
 
 const manageKloset = () => {
   const params = useParams()
   const {slug} = params
   const [productList, setProducts] = useState<Product[]>([])
-  const [type, setType] = useState()
+  const [type, setType] = useState<KlosetType>()
+  
+  if (typeof slug === 'string') {
+    useEffect(() => { 
 
-  useEffect(() => {
-    fetchKloset()
-  })
+      const fetchProducts = async (type:KlosetType) => {
+        const products = await fetchProductsByKloset(parseInt(slug),type)
+        setProducts(products)
+      }
 
-  const fetchProducts = async () => {
-    const products = await fetchProductsByKloset(slug,type)
-    setProducts(products)
-  }
-
-  const fetchKloset = async () => {
-    const data = await fetchSingleKloset(slug)
-    setType(data[0].type)
-    fetchProducts()
+      const fetchKloset = async () => {
+        const data = await fetchSingleKloset(parseInt(slug))
+        setType(data[0].type)
+        fetchProducts(data[0].type)
+      }
+      fetchKloset()
+    
+    },[])
   }
 
   return (

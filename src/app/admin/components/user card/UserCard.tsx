@@ -2,15 +2,15 @@ import { Icon } from "@iconify/react"
 import Image from "next/image"
 import styles from './UserCard.module.scss'
 import { changeRole } from "../../../../api/Admin"
-import { User } from "../../../../Types"
+import { UserData } from "../../../../Types"
 
-const UserCard = ({username,whatsapp_number,role,id}: User) => {
+const UserCard = ({username,whatsapp_number,role}: UserData) => {
 
   const handleRoleChange = async () => {
     const confirmChange = window.confirm(`Are you sure you want to change @${username}'s role?`)
 
     if (confirmChange) {
-      changeRole({role: role, id: id})
+      changeRole(role)
     }
 
   }

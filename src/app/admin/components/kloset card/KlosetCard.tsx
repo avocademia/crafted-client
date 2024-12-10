@@ -21,7 +21,7 @@ const KlosetCard = ({kloset}: KlosetCardProps) => {
         <div className={styles.textContainer}>
             <h3>{name}</h3>
             <div>{type}</div>
-            <span>{followers.length} Followers</span>
+            <span>Followers</span>
         </div>
     </div>
   )
