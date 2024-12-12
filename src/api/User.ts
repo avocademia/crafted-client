@@ -1,6 +1,7 @@
 import axios from "axios"
 import { toast } from "react-toastify"
 import { SigninData,ErrorData, SignupData, UserData } from "../Types"
+import { error } from "console"
 const environment = process.env.NEXT_PUBLIC_NODE_ENV
 const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
 const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
@@ -52,5 +53,17 @@ export const signOutUser = async () => {
         await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/users/signout`,{}, {withCredentials: true})
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
+    }
+}
+
+export const followKloset = async (klosetId:number) => {
+
+    try {
+        await axios.post(`${environment === 'production'?prodUrl:devUrl}/api/users/follow`,{kloset_id: klosetId}, {
+            withCredentials: true
+        })
+        return
+    } catch (error:ErrorData){
+        toast.error(error.response.data.error)
     }
 }

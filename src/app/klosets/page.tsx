@@ -33,9 +33,6 @@ const Klosets = () => {
         })
     }, [])
 
-    console.log('all:', klosets)
-    console.log('following', followedKlosets)
-
     return (
       <div>
         {activeDisplay === 'all' && <AllKlosets klosets={klosets}/>}
