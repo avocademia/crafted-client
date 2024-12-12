@@ -1,7 +1,9 @@
 import axios from "axios"
 import { toast } from "react-toastify"
 import { ErrorData, KlosetData, KlosetFormData, KlosetType, ProductFormData, Role } from "../Types"
-const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
+const environment = process.env.NEXT_PUBLIC_NODE_ENV
+const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
+const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
 
 interface APIKlosetFormData {
     data: KlosetFormData,
@@ -28,7 +30,7 @@ export const addKloset = async (klosetData:APIKlosetFormData) => {
             console.log(`${key}: ${value}`);
         }*/
 
-        await axios.post(`${serverUrl}/api/admins/add-kloset`, formData, {
+        await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/admins/add-kloset`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
@@ -42,8 +44,10 @@ export const addKloset = async (klosetData:APIKlosetFormData) => {
 
 export const verifyFirstAdmin = async () => {
 
+    console.log(devUrl , prodUrl)
+
     try {
-        const response = await axios.get(`${serverUrl}/api/admins/verify-first-admin`, {withCredentials: true})
+        const response = await axios.get(`${environment === 'production'? prodUrl:devUrl}/api/admins/verify-first-admin`, {withCredentials: true})
         return response.data.isFirstAdmin
     } catch (error:ErrorData) {
         console.log(error)
@@ -54,7 +58,7 @@ export const verifyFirstAdmin = async () => {
 export const fetchUsers = async () => {
 
     try {
-        const response = await axios.get(`${serverUrl}/api/admins/fetch-users`, {withCredentials: true})
+        const response = await axios.get(`${environment === 'production'?prodUrl:devUrl}/api/admins/fetch-users`, {withCredentials: true})
         return response.data.users
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -64,7 +68,7 @@ export const fetchUsers = async () => {
 export const changeRole = async (data:Role) => {
 
     try {
-        await axios.post(`${serverUrl}/api/admins/change-role`, data, {withCredentials: true})
+        await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/admins/change-role`, data, {withCredentials: true})
         toast.info('Role change successful', {hideProgressBar: true})
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -74,7 +78,7 @@ export const changeRole = async (data:Role) => {
 export const fetchKlosets = async () => {
 
     try {
-        const response = await axios.get(`${serverUrl}/api/admins/fetch-klosets`, {withCredentials: true})
+        const response = await axios.get(`${environment === 'production'? prodUrl:devUrl}/api/admins/fetch-klosets`, {withCredentials: true})
         return response.data.klosets
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -84,7 +88,7 @@ export const fetchKlosets = async () => {
 export const fetchSingleKloset = async (klosetId:number) => {
 
     try {
-        const response = await axios.get(`${serverUrl}/api/admins/kloset/${klosetId}`, {withCredentials: true})
+        const response = await axios.get(`${environment === 'production'? prodUrl:devUrl}/api/admins/kloset/${klosetId}`, {withCredentials: true})
         return response.data.kloset
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -150,7 +154,7 @@ export const addProduct = async (data:ProductFormData, slug:string) => {
         /*for (const [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`)
         }*/
-        await axios.post(`${serverUrl}/api/admins/kloset/${slug}/add-product`, formData, {withCredentials: true})
+        await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/admins/kloset/${slug}/add-product`, formData, {withCredentials: true})
         toast.info('Product added succesfully', {hideProgressBar: true})
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -163,7 +167,7 @@ export const saveDigitalProduct = async (file:File) => {
 
         const formData = new FormData()
         formData.append('digital_product', file)
-        const response = axios.post(`${serverUrl}/api/admins/save-digital-product`, formData, {
+        const response = axios.post(`${environment === 'production'? prodUrl:devUrl}/api/admins/save-digital-product`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
@@ -177,7 +181,7 @@ export const saveDigitalProduct = async (file:File) => {
 export const deleteDigitalFile = async (path:string) => {
 
     try {
-        await axios.post(`${serverUrl}/api/admins/delete-digital-product`, {path: path}, {withCredentials: true})
+        await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/admins/delete-digital-product`, {path: path}, {withCredentials: true})
         toast.info('deleted successfuly iykyk')
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -187,7 +191,7 @@ export const deleteDigitalFile = async (path:string) => {
 export const fetchProductsByKloset = async (kloset_id:number, type:KlosetType) => {
 
     try {
-        const response = await axios.get(`${serverUrl}/api/admins/kloset/${kloset_id}&${type}/products`, {withCredentials: true})
+        const response = await axios.get(`${environment === 'production'? prodUrl:devUrl}/api/admins/kloset/${kloset_id}&${type}/products`, {withCredentials: true})
         return response.data.products
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -203,7 +207,7 @@ export const fetchSingleProduct = async (queryParams:fetchSingleProductProps) =>
     const {type, product_id} = queryParams
 
     try {
-        const response = await axios.get(`${serverUrl}/api/admins/${product_id}&${type}`, {withCredentials: true})
+        const response = await axios.get(`${environment === 'production'? prodUrl:devUrl}/api/admins/${product_id}&${type}`, {withCredentials: true})
         return response.data.product
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})

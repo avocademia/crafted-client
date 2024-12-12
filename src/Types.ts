@@ -85,15 +85,20 @@ export type ProductFormData = {
 export type Product = {
     id: number,
     name: string,
-    author?: string,
     description?: string,
     summary?: string,
     cost: number,
+    production_time?: number,
+    sold_out?: boolean,
+    genre?: Genre[],
+    active?: boolean,
     category?: Category,
     sub_category?: string,
-    condition?: Condition,
-    genres: Genre[],
-    path: string,
+    book_condition?: Condition,
+    product_condition?: Condition,
     quantity?: number,
-    sold_out: boolean
-}
+    author?: string,
+    path?: string,
+    type: KlosetType,
+    photos: string[]
+  }

@@ -1,12 +1,14 @@
 import axios from "axios"
 import { toast } from "react-toastify"
 import { SigninData,ErrorData, SignupData, UserData } from "../Types"
-const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL
+const environment = process.env.NEXT_PUBLIC_NODE_ENV
+const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
+const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
 
 export const signInUser = async (data: SigninData) => {
 
     try {
-        const response = await axios.post(`${serverUrl}/api/users/signin`,
+        const response = await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/users/signin`,
                                             data, 
                                            {withCredentials: true}
                                          )
@@ -36,7 +38,7 @@ export const signUpUser = async (data: SignupData) => {
         for (const [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`);
         }*/
-        await axios.post(`${serverUrl}/api/users/signup`, data)
+        await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/users/signup`, data)
         toast.info('Account succesfully created', {hideProgressBar: true})
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
@@ -47,7 +49,7 @@ export const signOutUser = async () => {
 
     try {
         localStorage.clear()
-        await axios.post(`${serverUrl}/api/users/signout`,{}, {withCredentials: true})
+        await axios.post(`${environment === 'production'? prodUrl:devUrl}/api/users/signout`,{}, {withCredentials: true})
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
     }
