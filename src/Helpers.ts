@@ -2,6 +2,7 @@ import { Role, UserData } from "./Types"
 
 export const storeUserData = (userData: UserData) => {
     
+    localStorage.setItem('id', userData.id.toString())
     localStorage.setItem('username', userData.username)
     localStorage.setItem('firstName', userData.first_name)
     localStorage.setItem('profilePic', userData.profile_picture)
@@ -12,20 +13,22 @@ export const storeUserData = (userData: UserData) => {
 
 export const loadUserData = () => {
 
+        const id = localStorage.getItem('id')
         const username = localStorage.getItem('username')
         const first_name = localStorage.getItem('firstName')
         const profile_picture = localStorage.getItem('profilePic')
         const authenticated = localStorage.getItem('authenticated')
         const role = localStorage.getItem('role')
         
-        if (!username || !first_name || !profile_picture || !authenticated || !role) {
-            return null; // Return null if any essential data is missing
+        if (!username || !first_name || !profile_picture || !authenticated || !role ||!id) {
+            return null
         }
 
         const user = {
-            username: username,
-            first_name: first_name,
-            profile_picture: profile_picture,
+            id,
+            username,
+            first_name,
+            profile_picture,
             authenticated: authenticated === 'true',
             role: role as Role,
         }

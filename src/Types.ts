@@ -1,6 +1,8 @@
 export type Role = 'user'|'admin'
+export type KlosetStatus = 'pending'|'approved'
 
 export type UserData = {
+    id: number,
     first_name: string,
     username: string,
     role: Role,
@@ -46,10 +48,21 @@ export type KlosetFormData = {
 }
 
 export type KlosetData = {
-    data: KlosetData,
-    address: string|undefined,
-    user: number,
-    dp: File|null,
+    id: number,
+    name: string,
+    slogan: string,
+    category: Category,
+    user_id: number,
+    delivery: boolean,
+    active: boolean,
+    status: KlosetStatus,
+    delivery_time: number,
+    address: string,
+    type: KlosetType,
+    dp: string|null,
+    created_at: Date,
+    banner: string|null,
+    followers: string[]|null,
 }
 
 export type Kloset = {
