@@ -25,7 +25,7 @@ const Klosetcard = ({kloset}:{kloset:KlosetData}) => {
           <button onClick={handleFollow}>Follow</button>
         }
         {isFollowing &&
-          <h6>Following</h6>
+          <p>Following</p>
         }
       </div>
     </div>

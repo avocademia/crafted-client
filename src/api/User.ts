@@ -1,10 +1,18 @@
 import axios from "axios"
 import { toast } from "react-toastify"
-import { SigninData,ErrorData, SignupData, UserData } from "../Types"
-import { error } from "console"
+import { SigninData,ErrorData, SignupData, UserData, KlosetType } from "../Types"
+
 const environment = process.env.NEXT_PUBLIC_NODE_ENV
 const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
 const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
+
+export interface addCartItemData {
+    product_id: number,
+    product_name: string,
+    photo_path: string,
+    quantity: number|undefined,
+    cost: number,
+}
 
 export const signInUser = async (data: SigninData) => {
 
@@ -65,5 +73,50 @@ export const followKloset = async (klosetId:number) => {
         return
     } catch (error:ErrorData){
         toast.error(error.response.data.error)
+    }
+}
+
+export const addCartItem = async (itemData:addCartItemData) => {
+
+    if (itemData) {
+        try {
+            await axios.post(`${environment === 'production'?prodUrl:devUrl}/api/users/add-cart-item`,
+                                {itemData},
+                                {withCredentials: true}
+                            )
+            return
+        } catch (error:ErrorData) {
+            toast.error(error.response.data.error)
+        }
+    }
+}
+
+export const removeCartItem = async (itemId:number) => {
+
+    if (itemId) {
+        try {
+            await axios.delete(`${environment === 'production'?prodUrl:devUrl}/api/users/remove-cart-item/${itemId}`, {
+                withCredentials: true
+            })
+            return
+        } catch (error:ErrorData) {
+            toast.error(error.response.data.error)
+        }
+    }
+}
+
+export const verifyCartItem = async (productId:number, productType:KlosetType) => {
+
+    if (productId && productType) {
+        try {
+
+            const response = await axios.get(`${environment === 'environment'? prodUrl:devUrl}/api/users/verify-item/${productId}&${productType}`, {
+                withCredentials: true
+            })
+            return response.data.available
+
+        } catch (error:ErrorData) {
+            toast.error(error.response.data.error)
+        }
     }
 }
