@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react"
 import { Product } from "../../../../Types"
+import styles from './searchBar.module.scss'
 
 interface SearchBarProps {
     products: Product[],

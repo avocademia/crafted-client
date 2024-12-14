@@ -120,3 +120,17 @@ export const verifyCartItem = async (productId:number, productType:KlosetType) =
         }
     }
 }
+
+export const  populateCart = async () => {
+
+    try {
+
+        const response = await axios.get(`${environment === 'environment'? prodUrl:devUrl}/api/users/populate-cart`, {
+            withCredentials: true
+        })
+        return response.data.items
+
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error)
+    }
+}

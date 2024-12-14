@@ -5,6 +5,8 @@ import { populateShop } from "../../api/Public"
 import { Product } from "../../Types"
 import SearchBar from "./components/seach bar/SearchBar"
 import ProductDisplay from "./components/product display/ProductDisplay"
+import ShopNav from "../../components/navbars/ShopNav"
+import styles from './shop.module.scss'
 
 const Shop = () => {
 
@@ -22,8 +24,11 @@ const Shop = () => {
 
   return (
     <main>
-      <SearchBar products={products} setSearchResults={setSearchResults}/>
-      <ProductDisplay searchResults={searchResults}/>
+      <ShopNav/>
+      <section className={styles.mainSection}>
+        <SearchBar products={products} setSearchResults={setSearchResults}/>
+        <ProductDisplay searchResults={searchResults}/>
+      </section>
     </main>
   )
 }
