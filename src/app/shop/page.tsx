@@ -23,13 +23,13 @@ const Shop = () => {
   }, [])
 
   return (
-    <main>
+    <>
       <ShopNav/>
-      <section className={styles.mainSection}>
-        <SearchBar products={products} setSearchResults={setSearchResults}/>
+      <SearchBar products={products} setSearchResults={setSearchResults}/>
+      <main className={styles.main}>
         <ProductDisplay searchResults={searchResults}/>
-      </section>
-    </main>
+      </main>
+    </>
   )
 }
 export default Shop

@@ -1,3 +1,7 @@
-.mainSection {
-    padding:100px 0 0 0;
+@use'../../styles/mixins.scss';
+
+.main {
+    @include mixins.defaultPage;
+    margin: 130px 0 0 0;
+    min-height: auto !important;
 }

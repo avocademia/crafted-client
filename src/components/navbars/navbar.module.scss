@@ -1,3 +1,5 @@
+@use'../../styles/variables.scss';
+
 .container {
     margin: 15px 0 0 0;
     width: 60%;
@@ -20,7 +22,7 @@
     width: 30px;
     height: 30px;
     transition: transform 0.3s ease-in-out;
-    fill: #070100;
+    color: variables.$primary-color;
 }
 
 .icon:hover {

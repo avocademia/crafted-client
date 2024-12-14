@@ -1,8 +1,13 @@
+@use'../styles/mixins.scss';
+
 .container {
-    width: 95%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    @include mixins.defaultPage
+}
+
+@media (max-height:750px) {
+    .container {
+        margin-top: 100px;
+    }
 }
 
 .hero {
@@ -11,7 +16,6 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
-    padding: 100px 0 0 0;
     width: 100%;
 }
 

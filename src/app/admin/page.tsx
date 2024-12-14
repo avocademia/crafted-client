@@ -90,6 +90,7 @@ const admin = () => {
                           first_name={user.first_name}
                           profile_picture={user.profile_picture}
                           authenticated={user.authenticated}
+                          id={user.id}
                       />))
                     }
                   </div>,
@@ -154,9 +155,9 @@ const admin = () => {
       {isMobile && 
        <section className={styles.mobileNavigation}>
           {Object.keys(displays).map((key) => (
-            <button key={key} onClick={() => handleActiveSection(key)} className={`${styles.navButton}  ${activeSection === key ? styles.active : ''}`}>
-              <Icon icon={displays[key].icon} className={styles.navIcons}/>
-            </button>
+            <div key={key} onClick={() => handleActiveSection(key)} className={`${styles.navButton}  ${activeSection === key ? styles.active : ''}`}>
+              <Icon icon={displays[key].icon} className={styles.navIcons} height={28} width={28}/>
+            </div>
           ))}
        </section>}
     </main>

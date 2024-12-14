@@ -1,0 +1,23 @@
+@use'./variables.scss';
+
+@mixin defaultPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    min-height: 100vh;
+    font-family: variables.$primary-font;
+    width: 100%;
+}
+
+@mixin button1 {
+    background-color: variables.$primary-color;
+    transition: background-color 0.3s ease-in-out;
+    color: variables.$secondary-background-color;
+    font-family: variables.$primary-font;
+
+    &:hover {
+        background-color: variables.$secondary-color;
+    }
+}

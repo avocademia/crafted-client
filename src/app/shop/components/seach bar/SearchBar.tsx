@@ -31,11 +31,15 @@ const SearchBar = ({products, setSearchResults}: SearchBarProps) => {
     }
 
     return (
-        <article>
-            <form onSubmit={handleSubmit}>
-                <input type="text" onChange={handleSearchResults} />
-                <button type="submit">
-                    <Icon icon="mingcute:search-line"/>
+        <article className={styles.searchBar}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <input 
+                    type="text" 
+                    onChange={handleSearchResults} 
+                    className={styles.searchInput}
+                />
+                <button type="submit" className={styles.searchBtn}>
+                    <Icon icon="mingcute:search-line" height={30} width={30}/>
                 </button>
             </form>
         </article>

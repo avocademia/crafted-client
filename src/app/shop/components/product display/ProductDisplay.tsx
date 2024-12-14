@@ -1,5 +1,6 @@
 import { Product } from "../../../../Types"
 import ProductCard from "../product card/ProductCard"
+import styles from './productDisplay.module.scss'
 
 const ProductDisplay = ({searchResults}:{searchResults: Product[]}) => {
 
@@ -7,7 +8,7 @@ const ProductDisplay = ({searchResults}:{searchResults: Product[]}) => {
     const content = results.length? results: <div><p>No Matches</p></div>
 
     return (
-        <article>{content}</article>
+        <section className={styles.display}>{content}</section>
     )
 }
 

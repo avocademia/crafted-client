@@ -1,0 +1,14 @@
+.display {
+    width: 60%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0 0 0;
+}
+
+@media (max-width:500px) {
+    .display {
+        width: 90%;
+    }
+}
