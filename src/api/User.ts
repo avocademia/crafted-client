@@ -9,7 +9,6 @@ const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
 export interface addCartItemData {
     product_id: number,
     product_name: string,
-    photo_path: string,
     quantity: number|undefined,
     cost: number,
 }

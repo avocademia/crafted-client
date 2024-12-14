@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-const ShopNav = () => {
+const CartNav = () => {
 
   const [isMobile, setIsMobile] = useState(false)
 
@@ -29,10 +29,10 @@ const ShopNav = () => {
         <Link className={styles.navContainers} href='/'>
           <Icon icon="material-symbols-light:home" className={styles.icon}/>
         </Link>
-        <Link className={styles.navContainers} href='/cart'>
-          <Icon icon="solar:bag-outline" className={styles.icon}/>
+        <Link className={styles.navContainers} href='/shop'>
+          <Icon icon="mdi:shop-outline" className={styles.icon}/>
         </Link>
     </section>
   )
 }
-export default ShopNav
+export default CartNav

@@ -24,7 +24,6 @@ const ProductCard = ({product}:{product:Product}) => {
       product_id: product.id,
       product_type: product.type,
       product_name: product.name,
-      photo_path: product.photos[0],
       quantity: product.quantity,
       cost: product.cost
     }

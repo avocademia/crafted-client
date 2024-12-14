@@ -115,7 +115,7 @@
     "**/*.d.ts",
     ".next/types/**/*.ts",
     "src/app/layout.js"
-  ],
+, "next.config.mjs"  ],
   "exclude": [
     "node_modules"
   ]

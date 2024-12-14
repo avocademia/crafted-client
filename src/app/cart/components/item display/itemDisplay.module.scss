@@ -1,0 +1,30 @@
+.display {
+    padding: 100px 0 0 0;
+    width:60%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width:1300px) {
+    .display {
+        width: 80%;
+    }
+}
+
+@media (max-width:500px) {
+    .display {
+        width: 90%;
+    }
+}
+
+.itemContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 350px;
+    padding: 10px;
+    margin: 10px;
+}
