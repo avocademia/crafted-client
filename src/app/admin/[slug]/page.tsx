@@ -37,29 +37,46 @@ const manageKloset = () => {
   }
 
   return (
-    <main className={styles.main}>
-        <ManageKlosetNav slug={slug} hideSettingsButton={false}/>
-        <section className={styles.productsSection}>
-          <article className={styles.topProductSection} >
+    <>
+      <ManageKlosetNav slug={slug} hideSettingsButton={false}/>
+      <article className={styles.addProduct} >
             <h1>Products</h1>
             <Link href={`${slug}/add-product`}>
-              <Icon  icon="noto-v1:plus" height={30} width={30} className={styles.addKlosetIcon}/>
+              <Icon  icon="ic:round-plus" className={styles.icon}/>
             </Link>
           </article>
-          <article>
+      <main className={styles.main}>
+        <section className={styles.products}>
+          <article className={styles.productDisplay}>
             {
               productList.map((product) => (
-                <ProductCard 
+                <>
+                  <ProductCard 
                   key={product.id} 
                   product={product} 
                   type={type} 
                   slug={typeof slug === 'string'? slug : ''}
-                />
+                  />
+                  <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  type={type} 
+                  slug={typeof slug === 'string'? slug : ''}
+                  />
+                  <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  type={type} 
+                  slug={typeof slug === 'string'? slug : ''}
+                  />
+                </>
+                
               ))
             }
           </article>
         </section>
-    </main>
+      </main>
+    </>
   )
 }
 export default manageKloset

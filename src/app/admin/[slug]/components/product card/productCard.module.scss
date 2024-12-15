@@ -1,0 +1,74 @@
+@use'../../../../../styles/variables.scss';
+@use'../../../../../styles/mixins.scss';
+
+.card {
+    padding: 5px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.5);
+    width: 200px;
+    margin: 10px;
+    background-color: variables.$secondary-background-color;
+}
+
+.view {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: 8px;
+    width: 95%;
+}
+
+.image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+.view h5 {
+    margin: 0;
+    font-family: variables.$secondary-font;
+    font-size: 0.6rem;
+}
+
+.view p {
+    margin: 0;
+    font-size: 0.6rem;
+}
+
+.actions {
+    display: flex;
+    width: 95%;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.actions button {
+    @include mixins.button1;
+    font-size: 0.5rem;
+    padding: 5px 15px;
+    display: flex;
+    border-radius: 5px;
+}
+
+.link {
+    text-decoration: none;
+}
+
+@media (max-width: 500px) {
+    .card {
+        width: 250px;
+    }
+
+    .image {
+        width: 100px;
+        height: 100px;
+    }
+}

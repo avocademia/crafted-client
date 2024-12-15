@@ -121,7 +121,13 @@ const admin = () => {
         <section className={styles.mobileNavigation}>
             {Object.keys(displays).map((key) => (
               <div key={key} onClick={() => handleActiveSection(key)} className={`${styles.navButton}  ${activeSection === key ? styles.activeDiv : ''}`}>
-                <Icon  key={key} icon={displays[key].icon} className={ `${styles.navIcons} ${activeSection === key ? styles.activeIcon : ''}`} height={28} width={28}/>
+                <Icon  
+                  key={key} 
+                  icon={displays[key].icon} 
+                  className={ `${styles.navIcons} ${activeSection === key ? styles.activeIcon : ''}`} 
+                  height={28} 
+                  width={28}
+                />
               </div>
             ))}
         </section>}
