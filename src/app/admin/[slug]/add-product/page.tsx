@@ -3,7 +3,7 @@
 import ManageKlosetNav from '../../../../components/navbars/ManageKlosetNav'
 import styles from './products.module.css'
 import { usePathname, useParams } from "next/navigation"
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { useEffect, useState, ChangeEvent } from "react"
 import { Icon } from "@iconify/react"
 import Image from "next/image"
@@ -15,185 +15,183 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from "next/navigation"
 import { Genre, ProductFormData } from '../../../../Types'
 
-const addProductPage = () => {
-  const router = useRouter()
-  const params = useParams()
-  const {slug} = params
-  const pathname = usePathname()
-  const hideSettingsButton = pathname?.includes('/add-product')
-  const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm<ProductFormData>()
-  const [photoReviews, setPhotoReviews] = useState<(string|ArrayBuffer)[]>([])
-  const [photoErrors, setPhotoErrors] = useState<(string|null|false)[]|string>()
-  const [quantity, setQuantity] = useState(1)
-  const [kloset, setKloset] = useState()
-  const [selectedCategory, setSelectedCategory] = useState()
-  const [selectedType, setSelectedType] = useState()
-  const [digitalFileError, setDigitalFileError] = useState<string|null>()
-  const [currentFilePath, setCurrentFilePath] = useState()
-
-  type GenreOption = {
+interface GenreOption {
     value: Genre,
     label: Genre
-  }
-  const genreOptions: GenreOption[] = [
-    { value: 'fiction', label: 'fiction' },
-    { value: 'non-fiction', label: 'non-fiction' },
-    { value: 'fantasy', label: 'fantasy' },
-    { value: 'mystery', label: 'mystery' },
-    { value: 'sci-fi', label: 'sci-fi' },
-  ]
+}
 
-  const apparelSubcategories = [
-    { value: 'tops', label: 'tops' },
-    { value: 'bottoms', label: 'bottoms' },
-    { value: 'dresses', label: 'dresses' },
-    { value: 'underwear', label: 'underwear' },
-    { value: 'outerwear', label: 'outerwear' },
-    { value: 'units', label: 'units' },
-  ]
+interface OnFileChangeProps {
+  e: ChangeEvent<HTMLInputElement>,
+  index: number
+}
 
-  const jewellerySubcategories = [
-    { value: 'necklaces', label: 'necklaces' },
-    { value: 'bracelets', label: 'bracelets' },
-    { value: 'earrings', label: 'earrings' },
-    { value: 'rings', label: 'rings' },
-    { value: 'anklets', label: 'anklets' },
-    { value: 'watches', label: 'watches' },
-    { value: 'body', label: 'body' },
-  ]
+const addProductPage = () => {
+    const router = useRouter()
+    const params = useParams()
+    const {slug} = params
+    const pathname = usePathname()
+    const hideSettingsButton = pathname?.includes('/add-product')
+    const {register, handleSubmit, formState: {errors}, reset, setValue} = useForm<ProductFormData>()
+    const [photoReviews, setPhotoReviews] = useState<(string|ArrayBuffer)[]>([])
+    const [photoErrors, setPhotoErrors] = useState<(string|null|false)[]|string>()
+    const [quantity, setQuantity] = useState(1)
+    const [selectedCategory, setSelectedCategory] = useState()
+    const [selectedType, setSelectedType] = useState()
+    const [digitalFileError, setDigitalFileError] = useState<string|null>()
+    const [currentFilePath, setCurrentFilePath] = useState()
+    
+    if (slug === 'string') {
 
-  const decorSubcategories = [
-    { value: 'paintings', label: 'paintings' },
-    { value: 'wall art', label: 'wall art' },
-    { value: 'glassware', label: 'glassware' },
-    { value: 'ceramics', label: 'ceramics' },
-    { value: 'wood work', label: 'wood work' },
-    { value: 'lights', label: 'lights' },
-    { value: 'furniture', label: 'furniture' },
-    { value: 'rugs', label: 'rugs' },
-    { value: 'other arts', label: 'other arts' },
-  ]
+      useEffect(()=> {
 
-  const shoesSubcategories = [
-    { value: 'sneakers', label: 'sneakers' },
-    { value: 'heels', label: 'heels' },
-    { value: 'boots', label: 'boots' },
-    { value: 'dress shoes', label: 'dress shoes' },
-    { value: 'sandals', label: 'outerwear' },
-    { value: 'other', label: 'other' },
-  ]
+        const fetchKloset = async () => {
+          const data = await fetchSingleKloset(parseInt(slug))
+          setSelectedCategory(data[0].category)
+          setSelectedType(data[0].type)
+          setValue('category', data[0].category)
+          setValue('type', data[0].type)
+        }
+        fetchKloset()
 
-  if (slug === 'string') {
+      }, [])
 
-    useEffect(()=> {
+    }
 
-      const fetchKloset = async () => {
-        const data = await fetchSingleKloset(parseInt(slug))
-        setSelectedCategory(data[0].category)
-        setSelectedType(data[0].type)
-        setValue('category', data[0].category)
-        setValue('type', data[0].type)
+    const genreOptions: GenreOption[] = [
+      { value: 'fiction', label: 'fiction' },
+      { value: 'non-fiction', label: 'non-fiction' },
+      { value: 'fantasy', label: 'fantasy' },
+      { value: 'mystery', label: 'mystery' },
+      { value: 'sci-fi', label: 'sci-fi' },
+    ]
+
+    const apparelSubcategories = [
+      { value: 'tops', label: 'tops' },
+      { value: 'bottoms', label: 'bottoms' },
+      { value: 'dresses', label: 'dresses' },
+      { value: 'underwear', label: 'underwear' },
+      { value: 'outerwear', label: 'outerwear' },
+      { value: 'units', label: 'units' },
+    ]
+
+    const jewellerySubcategories = [
+      { value: 'necklaces', label: 'necklaces' },
+      { value: 'bracelets', label: 'bracelets' },
+      { value: 'earrings', label: 'earrings' },
+      { value: 'rings', label: 'rings' },
+      { value: 'anklets', label: 'anklets' },
+      { value: 'watches', label: 'watches' },
+      { value: 'body', label: 'body' },
+    ]
+
+    const decorSubcategories = [
+      { value: 'paintings', label: 'paintings' },
+      { value: 'wall art', label: 'wall art' },
+      { value: 'glassware', label: 'glassware' },
+      { value: 'ceramics', label: 'ceramics' },
+      { value: 'wood work', label: 'wood work' },
+      { value: 'lights', label: 'lights' },
+      { value: 'furniture', label: 'furniture' },
+      { value: 'rugs', label: 'rugs' },
+      { value: 'other arts', label: 'other arts' },
+    ]
+
+    const shoesSubcategories = [
+      { value: 'sneakers', label: 'sneakers' },
+      { value: 'heels', label: 'heels' },
+      { value: 'boots', label: 'boots' },
+      { value: 'dress shoes', label: 'dress shoes' },
+      { value: 'sandals', label: 'outerwear' },
+      { value: 'other', label: 'other' },
+    ]
+
+    const onSubmit = async (data:ProductFormData) => {
+
+      if (typeof slug === 'string') {
+        addProduct(data, slug)
+        reset()
+        router.back()
       }
-      fetchKloset()
-
-    }, [])
-
-  }
-
-  
-
-  const onSubmit = async (data:ProductFormData) => {
-
-    if (typeof slug === 'string') {
-      addProduct(data, slug)
-      reset()
-      router.back()
-    }
-   
-  }
-
-  interface OnFileChangeProps {
-    e: ChangeEvent<HTMLInputElement>,
-    index: number
-  }
-
-  const onFileChange = ({e, index}: OnFileChangeProps) => {
-    const target = e.target as HTMLInputElement; 
-
-    if (!target.files || target.files.length === 0) {
-      setPhotoErrors('No Images Detected')
-      return
+    
     }
 
-    const error = validateImages(target.files[0])
-    setPhotoErrors(error === true ? '' : 'Image validation error')
+    const onFileChange = ({e, index}: OnFileChangeProps) => {
+      const target = e.target as HTMLInputElement; 
 
-      if (target.files[0] && error === true) {
-          const reader = new FileReader()
-          reader.onloadend = () => {
-              const newPhotoReviews = [...photoReviews]
-              if (typeof newPhotoReviews[index] === 'string' && reader.result) {
-                newPhotoReviews[index] = reader.result
-                setPhotoReviews(newPhotoReviews)
-              }
-          }
-          const photoIndex = index + 1
-          setValue(`product_photo_${photoIndex}`, target.files[0])
-      reader.readAsDataURL(target.files[0])
-    }
-  }
-
-
-  const onGenreChange = (selectedOptions: MultiValue<{value: Genre, label: string}>) => {
-      const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : []
-      setValue('genres', selectedValues)
-  }
-
-  const incrementQuantity = () => {
-    setQuantity(prev => {
-      const newQuantity = prev + 1
-      setValue('quantity', newQuantity)
-      return newQuantity
-    })
-  }
-
-  const decrementQuantity = () => {
-    setQuantity(prev => {
-      const newQuantity = prev - 1
-      setValue('quantity', newQuantity)
-      return newQuantity
-    })
-  }
-
-  const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Math.max(parseInt(e.target.value))
-    setQuantity(value)
-    setValue('quantity', value)
-  }
-
-  const onDigitalFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement
-
-    if (!target.files || target.files.length === 0) {
-      setDigitalFileError('No file detected')
-      return
-    }
-    const maxSize = 50 * 1024 * 1024 // 50MB
-    if (target.files[0] && target.files[0].size > maxSize) {
-      setDigitalFileError("File size should be less than 50MB.")
-    } else {
-      if (currentFilePath) {
-        deleteDigitalFile(currentFilePath)
+      if (!target.files || target.files.length === 0) {
+        setPhotoErrors('No Images Detected')
+        return
       }
-      setDigitalFileError(null)
-      const path = await saveDigitalProduct(target.files[0])
-      if (!path) {
-        return setDigitalFileError('file path not received')
+
+      const error = validateImages(target.files[0])
+      setPhotoErrors(error === true ? '' : 'Image validation error')
+
+        if (target.files[0] && error === true) {
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                const newPhotoReviews = [...photoReviews]
+                if (typeof newPhotoReviews[index] === 'string' && reader.result) {
+                  newPhotoReviews[index] = reader.result
+                  setPhotoReviews(newPhotoReviews)
+                }
+            }
+            const photoIndex = index + 1
+            setValue(`product_photo_${photoIndex}`, target.files[0])
+        reader.readAsDataURL(target.files[0])
       }
-      setCurrentFilePath(path.data.path)
-      setValue('path', path.data.path)
     }
-  }
+
+
+    const onGenreChange = (selectedOptions: MultiValue<{value: Genre, label: string}>) => {
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : []
+        setValue('genres', selectedValues)
+    }
+
+    const incrementQuantity = () => {
+      setQuantity(prev => {
+        const newQuantity = prev + 1
+        setValue('quantity', newQuantity)
+        return newQuantity
+      })
+    }
+
+    const decrementQuantity = () => {
+      setQuantity(prev => {
+        const newQuantity = prev - 1
+        setValue('quantity', newQuantity)
+        return newQuantity
+      })
+    }
+
+    const handleQuantityChange = (e: ChangeEvent<HTMLInputElement>) => {
+      const value = Math.max(parseInt(e.target.value))
+      setQuantity(value)
+      setValue('quantity', value)
+    }
+
+    const onDigitalFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+      const target = e.target as HTMLInputElement
+
+      if (!target.files || target.files.length === 0) {
+        setDigitalFileError('No file detected')
+        return
+      }
+      const maxSize = 50 * 1024 * 1024 // 50MB
+      if (target.files[0] && target.files[0].size > maxSize) {
+        setDigitalFileError("File size should be less than 50MB.")
+      } else {
+        if (currentFilePath) {
+          deleteDigitalFile(currentFilePath)
+        }
+        setDigitalFileError(null)
+        const path = await saveDigitalProduct(target.files[0])
+        if (!path) {
+          return setDigitalFileError('file path not received')
+        }
+        setCurrentFilePath(path.data.path)
+        setValue('path', path.data.path)
+      }
+    }
 
   return (
     <main className={styles.main}>

@@ -53,12 +53,14 @@
 
 @media (max-width:500px) {
     .card {
-        width: 280px;
+        width: 300px;
     }
+
     .image {
         width: 250px;
         height: 250px;
     }
+    
     .productActions button {
         padding: 8px 20px 8px 20px;
         margin: 0 10px 0 10px;

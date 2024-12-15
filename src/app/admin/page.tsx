@@ -6,11 +6,12 @@ import AdminNav from '../../components/navbars/AdminNav'
 import KlosetCard from './components/kloset card/KlosetCard'
 import UserCard from './components/user card/UserCard'
 import { Icon } from '@iconify/react'
-import Link from 'next/link'
+import KlosetDisplay from './components/kloset display/KlosetDisplay'
 import { fetchKlosets, fetchUsers, verifyFirstAdmin } from '../../api/Admin'
 import { Kloset, UserData } from '../../Types'
+import UsersDisplay from './components/users display/UsersDisplay'
 
-interface Displays {
+interface Display {
   label: string,
   icon: string,
   content: JSX.Element
@@ -23,80 +24,6 @@ const admin = () => {
     const [isFirstAdmin, setFirstAdmin] = useState(false)
     const [users, setUsers] = useState<UserData[]>([])
     const [klosets, setKlosets] = useState<Kloset[]>([])
-
-
-    const displays: Record<string, Displays> = {
-        overview: {
-          label: 'Overview',
-          icon: "material-symbols:dashboard",
-          content: 
-            <div className={styles.displayContainers}>
-                Overview Section
-            </div>,
-        },
-        klosets: {
-          label: 'Klosets',
-          icon: "mdi:hanger",
-          content: 
-            <div className={styles.displayContainers}>
-                <div className={styles.addButtonContainer}>
-                    <Link href='/admin/add-kloset'>
-                        <Icon  icon="noto-v1:plus" height={30} width={30} className={styles.addKlosetIcon}/>
-                    </Link>
-                </div>
-                <div>
-                    { klosets.map((kloset,index) => 
-                      (<Link key={index} href={`admin/${kloset.id}`}><KlosetCard kloset={kloset}/></Link>))
-                    }
-                </div>
-            </div>,
-        },
-        orders: {
-          label: 'Orders',
-          icon: "material-symbols:orders-outline",
-          content: 
-            <div className={styles.displayContainers}>
-                Orders Section
-            </div>,
-        },
-        stats: {
-          label: 'Stats',
-          icon: "material-symbols:query-stats-rounded",
-          content: 
-            <div className={styles.displayContainers}>
-                Stats Section
-            </div>,
-        },
-        account: {
-          label: 'Account',
-          icon: "lucide:hand-coins",
-          content: 
-            <div className={styles.displayContainers}>
-                Account Section
-            </div>,
-        },
-        ...(isFirstAdmin ? {
-          users: {
-              label: 'Users',
-              icon: "mdi:user" ,
-              content: 
-                  <div className={styles.displayContainers}>
-                    {users.map((user, index) => 
-                      (<UserCard 
-                          key={index} 
-                          username={user.username} 
-                          whatsapp_number={user.whatsapp_number} 
-                          role={user.role} 
-                          first_name={user.first_name}
-                          profile_picture={user.profile_picture}
-                          authenticated={user.authenticated}
-                          id={user.id}
-                      />))
-                    }
-                  </div>,
-          }
-          }: {}),
-      }
 
     useEffect (() => {
 
@@ -115,7 +42,43 @@ const admin = () => {
         checkFirstAdmin()
 
         return window.removeEventListener('resize' , handleResize)   
-      }, [])
+    }, [])
+
+    const displays: Record<string, Display> = {
+        overview: {
+          label: 'Overview',
+          icon: "material-symbols:dashboard",
+          content: <div>Overview Section</div>,
+        },
+        klosets: {
+          label: 'Klosets',
+          icon: "mdi:hanger",
+          content: <KlosetDisplay klosets={klosets}/>,
+        },
+        orders: {
+          label: 'Orders',
+          icon: "material-symbols:orders-outline",
+          content: 
+            <div>Orders Section</div>,
+        },
+        stats: {
+          label: 'Stats',
+          icon: "material-symbols:query-stats-rounded",
+          content: <div>Stats Section</div>,
+        },
+        account: {
+          label: 'Account',
+          icon: "lucide:hand-coins",
+          content: <div>Account Section</div>,
+        },
+        ...(isFirstAdmin ? {
+          users: {
+              label: 'Users',
+              icon: "mdi:user" ,
+              content: <UsersDisplay users={users}/>,
+          }
+        }: {}),
+    }
 
     const displayUsers = async () => {
       const data = await fetchUsers()
@@ -137,30 +100,33 @@ const admin = () => {
         displayKlosets()
       }
     }
+
   return (
-    <main className={styles.main}>
+    <>
       <AdminNav/>
-      <section className={styles.mainSection }>
-         {!isMobile && 
-          <article className={styles.navigation}>
-             {Object.keys(displays).map((key) => (
-                <button key={key} onClick={() => handleActiveSection(key)} className={activeSection === key ? styles.activeNav : ''}>{displays[key].label}</button>
-             ))}
-          </article>
-         }
-          <article className={styles.display}>
+      <main className={styles.main}>
+        <section className={styles.mainSection }>
+          {!isMobile && 
+            <article className={styles.navigation}>
+              {Object.keys(displays).map((key) => (
+                  <button key={key} onClick={() => handleActiveSection(key)} className={activeSection === key ? styles.activeNav : ''}>{displays[key].label}</button>
+              ))}
+            </article>
+          }
+            <article className={styles.display}>
                 {displays[activeSection].content}
-          </article>
-      </section>
-      {isMobile && 
-       <section className={styles.mobileNavigation}>
-          {Object.keys(displays).map((key) => (
-            <div key={key} onClick={() => handleActiveSection(key)} className={`${styles.navButton}  ${activeSection === key ? styles.active : ''}`}>
-              <Icon icon={displays[key].icon} className={styles.navIcons} height={28} width={28}/>
-            </div>
-          ))}
-       </section>}
-    </main>
+            </article>
+        </section>
+        {isMobile && 
+        <section className={styles.mobileNavigation}>
+            {Object.keys(displays).map((key) => (
+              <div key={key} onClick={() => handleActiveSection(key)} className={`${styles.navButton}  ${activeSection === key ? styles.activeDiv : ''}`}>
+                <Icon  key={key} icon={displays[key].icon} className={ `${styles.navIcons} ${activeSection === key ? styles.activeIcon : ''}`} height={28} width={28}/>
+              </div>
+            ))}
+        </section>}
+      </main>
+    </>
   )
 }
 export default admin

@@ -1,21 +1,25 @@
+@use'../../styles/mixins.scss';
+@use'../../styles/variables.scss';
+
 .main {
-    width: 80%;
-    height: 100%;
+    @include mixins.defaultPage;
+    max-height: 100vh;
+    overflow: hidden;
 }
 
 .mainSection {
-    margin: 100px 0 0 0;
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 100%;
+    align-items: center;
 }
 
 .navigation {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 500px;
+    height: 100vh;
     justify-content: center;
     width: 20%;
     padding: 30px 0 0 0;
@@ -25,7 +29,7 @@
     background: transparent; 
     border: none;
     text-align: center;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
     padding: 0.5rem 2rem 0.5rem 2rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin: 20px 0 0 0;
@@ -34,7 +38,7 @@
 
 .navigation button:hover {
     transform: scale(1.1);
-    box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 5px 5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .mobileNavigation {
@@ -43,7 +47,6 @@
     justify-content: space-between;
     position: fixed;
     bottom: 0;
-    left: 0; 
     width: 90%;
     padding: 0.5rem;
     margin: 0 0 30px 0;
@@ -58,24 +61,24 @@
     align-items: center;
     height: 50px;
     width: 50px;
-    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
     border-radius: 50%;
 }
 
 .navIcons {
-    color: #002d00;
+    color: variables.$primary-color;
 }
 
-.active {
-    color: red;
+.activeIcon {
+    color: variables.$secondary-color;
 }
 
 .display {
     width: 80%;
-    min-height: 600px;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 }
 
 .displayContainers {
@@ -85,6 +88,7 @@
     flex-direction: column;
     align-items: flex-start;
 }
+
 .activeNav {
     color: #f0f0f0;
     background-color: #002d00 !important;
@@ -112,5 +116,19 @@
     }
     .display {
         min-height: 400px;
+    }
+}
+
+@media (max-width: 500px) {
+    
+    .main {
+        overflow-x: hidden;
+        overflow: visible;
+        width: 100%;
+    }  
+
+    .display {
+        width: 100%;
+        height: auto;
     }
 }

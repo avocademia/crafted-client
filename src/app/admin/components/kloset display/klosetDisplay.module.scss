@@ -1,0 +1,47 @@
+@use'../../../../styles/variables.scss';
+
+.display {
+    width: 100%;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+.addButtonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.addButtonContainer {
+    width: 90%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.icon {
+    transition: transform 0.3s ease-in-out;
+    color: variables.$secondary-color;
+    width: 50px;
+    height: 50px
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+.klosets {
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 80vh;
+}
+
+.klosetLink {
+    text-decoration: none;
+}

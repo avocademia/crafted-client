@@ -8,7 +8,9 @@
     background-color: transparent;
     min-height: 100vh;
     font-family: variables.$primary-font;
-    width: 100%;
+    width: 80%;
+    padding: 0;
+    margin: 0;
 }
 
 @mixin button1 {

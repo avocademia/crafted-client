@@ -7,17 +7,14 @@ import styles from './manageKlosets.module.scss'
 import { useState, useEffect,} from "react"
 import { Icon } from "@iconify/react"
 import { fetchProductsByKloset, fetchSingleKloset } from "../../../api/Admin"
-import RetailProductCard from "./components/RetailProductCard"
-import CustomProductCard from "./components/CustomProductCard"
-import DigitalProductCard from "./components/DigitalProductCard"
-import BookCard from "./components/BookCard"
+import ProductCard from "./components/product card/ProductCard"
 import { KlosetType, Product } from "../../../Types"
 
 const manageKloset = () => {
   const params = useParams()
   const {slug} = params
   const [productList, setProducts] = useState<Product[]>([])
-  const [type, setType] = useState<KlosetType>()
+  const [type, setType] = useState<KlosetType>('retail')
   
   if (typeof slug === 'string') {
     useEffect(() => { 
@@ -29,8 +26,10 @@ const manageKloset = () => {
 
       const fetchKloset = async () => {
         const data = await fetchSingleKloset(parseInt(slug))
-        setType(data[0].type)
-        fetchProducts(data[0].type)
+        if (data) {
+          setType(data[0].type)
+          fetchProducts(data[0].type)
+        }
       }
       fetchKloset()
     
@@ -48,33 +47,15 @@ const manageKloset = () => {
             </Link>
           </article>
           <article>
-            { type === 'retail' &&
-                productList.map((product) => (
-                  <Link href={`${slug}/${product.id}?type=${type}`}>
-                    <RetailProductCard key={product.id} product={product}/>
-                  </Link>
-                ))
-            }
-            { type === 'custom' &&
-                productList.map((product) => (
-                  <Link href={`${slug}/${product.id}?type=${type}`}>
-                    <CustomProductCard key={product.id} product={product}/>
-                  </Link>
-                ))
-            }
-            { type === 'digital' &&
-                productList.map((product) => (
-                  <Link href={`${slug}/${product.id}?type=${type}`}>
-                    <DigitalProductCard key={product.id} product={product}/>
-                  </Link>  
-                ))
-            }
-            { type === 'books' &&
-                productList.map((product) => (
-                  <Link href={`${slug}/${product.id}?type=${type}`}>
-                    <BookCard key={product.id} product={product}/>
-                  </Link>
-                ))
+            {
+              productList.map((product) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  type={type} 
+                  slug={typeof slug === 'string'? slug : ''}
+                />
+              ))
             }
           </article>
         </section>
