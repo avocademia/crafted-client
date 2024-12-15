@@ -1,0 +1,6 @@
+@use'../../styles/mixins.scss';
+
+.main {
+    @include mixins.defaultPage;
+    justify-content: start !important;
+}

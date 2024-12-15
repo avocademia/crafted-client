@@ -2,6 +2,13 @@ import { followKloset } from "../../../../api/User"
 import { loadUserData } from "../../../../Helpers"
 import { KlosetData } from "../../../../Types"
 import { useState } from "react"
+import styles from './klosetCard.module.scss'
+import Image from "next/image"
+import { Icon } from "@iconify/react"
+
+const environment = process.env.NEXT_PUBLIC_NODE_ENV
+const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
+const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
 
 const Klosetcard = ({kloset}:{kloset:KlosetData}) => {
   const user = loadUserData()
@@ -16,17 +23,55 @@ const Klosetcard = ({kloset}:{kloset:KlosetData}) => {
   const isFollowing = user && localFollowers.includes(user.id)
 
   return (
-    <div>
-      <h4>{kloset.name}</h4>
-      <h6>{kloset.type}</h6>
-      <div>
-        <button>view</button>
-        {!isFollowing &&
-          <button onClick={handleFollow}>Follow</button>
-        }
-        {isFollowing &&
-          <p>Following</p>
-        }
+    <div className={styles.card}>
+      <div className={styles.top}>
+        <Image 
+          src={`${environment=== 'production'? prodUrl:devUrl}/${kloset.dp}`} 
+          alt="kloset display picture"
+          width={80}
+          height={80}
+          className={styles.image}
+        />
+        <div className={styles.text}>
+          <h5>{kloset.name}</h5>
+          <div className={styles.type}>
+            <p>{kloset.type}</p>
+          </div>
+        </div>
+      </div>
+      <div className={styles.bottom}>
+        <div className={styles.actions}>
+          {!isFollowing &&
+            <button onClick={handleFollow}>Follow</button>
+          }
+          {isFollowing &&
+            <p>Following</p>
+          }
+          <button>view</button>
+        </div>
+
+        <div className={styles.details}>
+          <div className={styles.imageDiv}>
+            <Image
+              src={'/user.png'}
+              alt="founder profile picture"
+              height={30}
+              width={30}
+              className={styles.image}
+            />
+          </div>
+          <div className={styles.rating}>
+            <Icon 
+              icon="ic:outline-star" 
+              className={styles.star}
+            />
+            <span>4.5</span>
+          </div>
+          <div className={styles.orders}>
+            <p>1.2k</p>
+          </div>
+          
+        </div>
       </div>
     </div>
   )

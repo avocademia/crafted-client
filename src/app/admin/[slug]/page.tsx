@@ -50,27 +50,12 @@ const manageKloset = () => {
           <article className={styles.productDisplay}>
             {
               productList.map((product) => (
-                <>
                   <ProductCard 
                   key={product.id} 
                   product={product} 
                   type={type} 
                   slug={typeof slug === 'string'? slug : ''}
                   />
-                  <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  type={type} 
-                  slug={typeof slug === 'string'? slug : ''}
-                  />
-                  <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  type={type} 
-                  slug={typeof slug === 'string'? slug : ''}
-                  />
-                </>
-                
               ))
             }
           </article>

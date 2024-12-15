@@ -1,0 +1,138 @@
+@use'../../../../styles/mixins.scss';
+@use'../../../../styles/variables.scss';
+
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 8px;
+    margin: 15px;
+    width: 220px;
+    box-shadow: 5px 5px 8px rgb(0, 0, 0, 0.5);
+    background-color: variables.$secondary-background-color;
+}
+
+.top {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+
+.imageDiv {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.type {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: variables.$primary-color;
+    color: variables.$secondary-background-color;
+    padding: 2px 0;
+    border-radius: 3px;
+}
+
+.image {
+    border-radius: 50%;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.text h5 {
+    margin: 0;
+    font-size: 0.8rem;
+    font-family: variables.$secondary-font;
+}
+
+.type p {
+    margin: 0;
+    font-size: 0.6rem;
+}
+
+.bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.rating {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    padding-right: 5px;
+}
+
+.rating span {
+    display: flex;
+    font-size: 0.5rem;
+    font-family: variables.$secondary-font;
+    font-weight: 400;
+}
+
+.star {
+    color: #f4da66;
+}
+
+.actions {
+    width: 60%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column  
+}
+
+.actions button {
+    @include mixins.button1;
+    margin-top: 5px;
+    padding: 2px 20px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+}
+
+.actions p {
+    margin: 0;
+    font-size: 0.6rem;
+    font-style: italic;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1px;
+}
+
+.details p {
+    margin: 0;
+    font-size: 0.6rem;
+    font-style: italic;
+}
+
+.orders {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+}
+

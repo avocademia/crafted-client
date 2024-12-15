@@ -22,7 +22,7 @@ const HomeNavbar = () => {
         </Link>
         {role === 'admin' && 
          <Link className={styles.navContainers} href='/admin'>
-           <Icon icon="mdi:web" className={styles.icon}/>
+           <Icon icon="icon-park-outline:cook" className={styles.icon}/>
          </Link>
          }
         <Link className={styles.navContainers} href='/user'>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Icon } from "@iconify/react"
 import { KlosetData } from "../../../../Types"
+import styles from './searchBar.module.scss'
 
 interface SearchBarProps {
     klosets: KlosetData[],
@@ -35,10 +36,14 @@ const SearchBar = ({ klosets, setSearchResults }: SearchBarProps) => {
     if (loading) return <div>Loading...</div>
 
     return (
-        <article>
-            <form onSubmit={handleSubmit}>
-                <input type="text" onChange={handleSearchResults} />
-                <button type="submit">
+        <article className={styles.searchBar}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <input 
+                    type="text" 
+                    onChange={handleSearchResults} 
+                    className={styles.searchInput}
+                />
+                <button type="submit" className={styles.searchBtn}>
                     <Icon icon="mingcute:search-line" />
                 </button>
             </form>

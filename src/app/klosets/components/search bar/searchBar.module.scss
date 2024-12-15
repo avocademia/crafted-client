@@ -1,0 +1,25 @@
+.searchBar {
+    margin: 90px 0 0 0;
+    position: fixed;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.searchBtn {
+    margin: 0 0 0 15px;
+    border: none;
+    background-color: transparent;
+}
+
+.searchInput {
+    margin: 0 15px 0 0;
+    height: 30px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+}
