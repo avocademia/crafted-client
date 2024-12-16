@@ -5,6 +5,7 @@ import { useState } from "react"
 import styles from './klosetCard.module.scss'
 import Image from "next/image"
 import { Icon } from "@iconify/react"
+import Link from "next/link"
 
 const environment = process.env.NEXT_PUBLIC_NODE_ENV
 const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
@@ -47,7 +48,10 @@ const Klosetcard = ({kloset}:{kloset:KlosetData}) => {
           {isFollowing &&
             <p>Following</p>
           }
-          <button>view</button>
+          <Link href={`/klosets/${kloset.id}`}>
+            <button>view</button>
+          </Link>
+          
         </div>
 
         <div className={styles.details}>

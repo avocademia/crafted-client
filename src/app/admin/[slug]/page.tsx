@@ -27,8 +27,8 @@ const manageKloset = () => {
       const fetchKloset = async () => {
         const data = await fetchSingleKloset(parseInt(slug))
         if (data) {
-          setType(data[0].type)
-          fetchProducts(data[0].type)
+          setType(data.type)
+          fetchProducts(data.type)
         }
       }
       fetchKloset()

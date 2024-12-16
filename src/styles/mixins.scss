@@ -15,7 +15,7 @@
 
 @mixin button1 {
     background-color: variables.$primary-color;
-    transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     color: variables.$secondary-background-color;
     font-family: variables.$primary-font;
     border: none;

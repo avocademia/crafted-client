@@ -97,6 +97,7 @@ export type ProductFormData = {
 
 export type Product = {
     id: number,
+    kloset_id: number,
     name: string,
     description?: string,
     summary?: string,

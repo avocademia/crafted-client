@@ -1,0 +1,181 @@
+@use'../../../styles/mixins.scss';
+@use'../../../styles/variables.scss';
+
+.main {
+    @include mixins.defaultPage;
+}
+
+.view {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    gap: 30px;
+}
+
+.firstView {
+    width: 40%;
+}
+
+.photoWrapper {
+    position: relative;
+    height: 250px;
+}
+
+.navWrapper {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.navButton {
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    color: variables.$secondary-background-color;
+
+    &:hover {
+        background-color: variables.$secondary-color;
+    }
+}
+
+.slide {
+    width: 250px !important;
+}
+
+.productImage {
+    height: 250px;
+    width: 250px;
+    border-radius: 10px;
+}
+
+.overview {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.overview h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-family: variables.$secondary-font;
+}
+
+.overview h6 {
+    margin: 10px 0 0 0;
+    font-family: variables.$secondary-font;
+    font-weight: 500;
+}
+
+.overview p {
+    margin: 10px 0 0 0;
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.overview button {
+    background-color: variables.$secondary-color;
+    border: none;
+    margin: 0 5px;
+    font-size: 0.7rem;
+    color: variables.$secondary-background-color;
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-style: italic;
+}
+
+.details p {
+    margin: 0;
+    font-size: 0.6rem;
+    background-color: variables.$secondary-background-color;
+}
+
+.details {
+    padding: 15px;
+    min-height: 40vh;
+    border-radius: 10px;
+    box-shadow: 5px 5px 8px rgb(0, 0, 0, 0.5);
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin: 20px 0 0 0;
+}
+
+.actions button {
+    @include mixins.button1;
+    padding: 10px 30px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 8px rgb(0, 0, 0, 0.5);
+
+    &:hover {
+        box-shadow: 8px 8px 10px rgb(0, 0, 0, 0.6);
+        transform: scale(1.1);
+    }
+}
+
+@media (max-width: 350px) {
+    .actions {
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .actions {
+        position: fixed;
+        bottom: 0;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .main {
+        margin-top: 100px;
+    }
+
+    .view {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .firstView {
+        width: 95%;
+    }
+
+    .secondView {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .details {
+        width: 90%;
+    }
+}
+
+@media (max-height: 600px) {
+    .details {
+        height: 30vh;
+    }
+
+    .details p {
+        font-size: 9px;
+    }
+}
