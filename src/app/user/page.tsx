@@ -7,13 +7,12 @@ import { toast, ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
 import styles from './user.module.scss'
 import Link from "next/link"
-import { loadUserData, checkSessionValidity } from "../../Helpers"
+import { loadUserData } from "../../Helpers"
 import { signOutUser } from "../../api/User"
 import UserNav from "../../components/navbars/UserNav"
 import { UserData } from "../../Types"
 
 const User = () => {
-  const [isMounted, setIsMounted] = useState(false)
   const [user, setUser] = useState<UserData>()
 
   const router = useRouter()
@@ -24,26 +23,20 @@ const User = () => {
   }
 
   useEffect(() => {
-    setIsMounted(true)
-    const sessionIsValid = checkSessionValidity()
-    
-    if (!sessionIsValid) {
-      router.push('/signin')
-      toast.error('You must sign in to access this page', { hideProgressBar: true })
-      return
-    }
 
-    const userData = loadUserData()
+    let userData = loadUserData()
 
-    if (userData) {
-      setUser(userData)
-    } else {
-      router.push('/signin')
-      toast.error('User data not found', { hideProgressBar: true })
+    if (userData && userData.id) {
+      const newUserData = {
+        ...userData,
+        id: parseInt(userData.id)
+      }
+
+      setUser(newUserData)
     }
   }, [router])
 
-  if (!isMounted || !user) return <p>Loading...</p>
+  if (!user) return router.push('/signin')
 
   return (
     <section>

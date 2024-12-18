@@ -36,11 +36,11 @@ export const populateProductPage =async (productId:number, type:KlosetType) => {
     }
 }
 
-export const populateKlosetPage = async (klosetId:number) => {
+export const populateKloset = async (klosetId:number) => {
 
     try {
         const response = await axios.get(`${environment === 'production'?prodUrl:devUrl}/api/kloset/${klosetId}`)
-        return response.data.kloset
+        return response.data
     } catch (error:ErrorData) {
         toast.error(error.response.data.error)
     }

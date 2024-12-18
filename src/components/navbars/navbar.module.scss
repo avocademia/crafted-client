@@ -2,7 +2,7 @@
 
 .container {
     margin: 15px 0 0 0;
-    width: 60%;
+    width: 50%;
     min-height: 70px;
     display: flex;
     flex-direction: row;
@@ -11,6 +11,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 1000;
 }
 
 .navContainers {
@@ -33,5 +34,9 @@
 @media (max-width: 720px) {
     .container {
         max-width: 80%;
+    }
+
+    .container {
+        padding: 0;
     }
 }

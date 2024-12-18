@@ -1,0 +1,321 @@
+@use'../../../styles/mixins.scss';
+@use'../../../styles/variables.scss';
+
+.main {
+    @include mixins.defaultPage;
+}
+
+.profile {
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+}
+
+.banner {
+    width: 100%;
+    height: 250px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.screen {
+    position: inherit;
+    background-color: rgb(0, 0, 0, 0.5);
+    display: flex;
+    height: 250px;
+    width: inherit;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.profile h1 {
+    position: inherit;
+    color: #eeeded;
+    font-size: 2rem;
+}
+
+.profile h6 {
+    position: inherit;
+    margin-top: 100px;
+    color: #eeeded;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.shop {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    align-items: end;
+    justify-content: right;
+}
+
+
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    width: 20%;
+    padding-top: 20px;
+    z-index: 1000;
+    position: fixed;
+    bottom: 0;
+    left: 303px;
+    width: 180px;
+    height: 520px;
+}
+
+.logo {
+    margin: -110px 0 80px 0;
+    border-radius: 50%;
+    box-shadow: 5px 5px 7px rgb(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.pin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.contacts {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+}
+
+.button {
+    background-color: variables.$secondary-background-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 5px 5px 7px rgb(0, 0, 0, 0.5);
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 8px 8px 10px rgb(0, 0, 0, 0.5);
+    }
+}
+
+.pinButton {
+    background-color: variables.$secondary-background-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 5px 5px 7px rgb(0, 0, 0, 0.5);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 8px 8px 10px rgb(0, 0, 0, 0.5);
+    }
+}
+
+.pinButtonActive {
+    background-color: variables.$secondary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 5px 5px 7px rgb(0, 0, 0, 0.5);
+}
+
+.pin p {
+    margin: 10px 0 20px 0;
+    color: variables.$primary-color;
+    font-style: italic;
+    font-size: small;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.rating span {
+    font-family: variables.$secondary-font;
+    font-weight: 300;
+    font-size: 0.6rem;
+}
+
+.rating {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.stats p {
+    margin: 0;
+    font-style: italic;
+    font-size: 0.8rem;
+    margin-top: 10px;
+    color: variables.$primary-color;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: center;
+    width: 80%;
+    margin-top: 250px;
+    
+}
+
+.searchBarWrapper {
+    position: absolute;
+    top: 170px;
+    width: 100%;
+    left: 700px;
+    z-index: 1000;
+}
+
+@media (max-width: 768px){
+
+    .profile {
+        position: absolute !important;
+        width: 100%;
+    }
+
+    .details {
+        position: inherit;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin-top: 200px;
+        height: 80px !important;
+        padding-top: 210px !important;
+    }
+    
+    .products {
+        width: 100%;
+    }
+
+    .pin {
+        margin: 0;
+    }
+
+    .contacts {
+        padding: 0;
+        width: 170px;
+    }
+
+    .logo {
+        margin: 0 15px 0 0;
+
+    }
+
+    .products {
+        width: 100%;
+        margin-top: 0;
+        background-color: blue;
+    }
+
+    .searchBarWrapper {
+        margin-top: 50px;
+    }
+
+    .screen {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .banner {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .shop {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 1030px) {
+
+    .profile {
+        position: fixed;
+        width: 100%;
+    }
+
+    .details {
+        position: inherit;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin-top: 200px;
+        height: 80px !important;
+    }
+
+    .details p {
+        display: none;
+    }
+
+    .pin {
+        margin: 0;
+    }
+
+    .contacts {
+        padding: 0;
+        width: 170px;
+        background-color: red;
+    }
+
+    .logo {
+        margin: 0 15px 0 0;
+
+    }
+
+    .products {
+        width: 100%;
+        margin-top: 0;
+        background-color: blue;
+    }
+
+    .screen {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .banner {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .shop {
+        width: 100%;
+    }
+
+    .searchBarWrapper {
+        display: none;
+    }
+
+    .details, .shop, .profile {
+        margin: 0;
+        padding: 0;
+      }
+
+      
+}
+

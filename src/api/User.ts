@@ -23,7 +23,7 @@ export const signInUser = async (data: SigninData) => {
         const user:UserData = response.data.user
         return user  
     } catch (error:ErrorData) {
-        toast.error(error.response.data.error)
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
@@ -71,7 +71,7 @@ export const followKloset = async (klosetId:number) => {
         })
         return
     } catch (error:ErrorData){
-        toast.error(error.response.data.error)
+        toast.error(error.response.data.error, {hideProgressBar: true})
     }
 }
 
@@ -85,7 +85,7 @@ export const addCartItem = async (itemData:addCartItemData) => {
                             )
             return
         } catch (error:ErrorData) {
-            toast.error(error.response.data.error)
+            toast.error(error.response.data.error, {hideProgressBar: true})
         }
     }
 }
@@ -99,7 +99,7 @@ export const removeCartItem = async (itemId:number) => {
             })
             return
         } catch (error:ErrorData) {
-            toast.error(error.response.data.error)
+            toast.error(error.response.data.error, {hideProgressBar: true})
         }
     }
 }
@@ -115,7 +115,7 @@ export const verifyCartItem = async (productId:number, productType:KlosetType) =
             return response.data.available
 
         } catch (error:ErrorData) {
-            toast.error(error.response.data.error)
+            toast.error(error.response.data.error, {hideProgressBar: true})
         }
     }
 }
@@ -129,7 +129,7 @@ export const  populateCart = async () => {
         })
         return response.data.items
 
-    } catch (error:ErrorData) {
-        toast.error(error.response.data.error)
+    } catch (error) {
+        toast.error('log in', {hideProgressBar: true})
     }
 }

@@ -7,7 +7,7 @@ import { useRouter} from 'next/navigation'
 
 
 
-const ProductPageNav = ({hideLogo}: {hideLogo:boolean}) => {
+const KroductPageNav = () => {
   const router = useRouter()
 
   const [isMobile, setIsMobile] = useState(false)
@@ -27,18 +27,13 @@ const ProductPageNav = ({hideLogo}: {hideLogo:boolean}) => {
   
   return (
     <section className={styles.container}>
-        {!isMobile && 
-         <Link className={styles.navContainers} href='/'>
-          <Image src='/logo.png' width={130} height={70} alt='logo'/>
-         </Link>
-        }
         <button className={styles.navContainers} onClick={() => router.back()} >
-          <Icon icon="icon-park-solid:back" className={styles.icon}/>
+          <Icon icon="icon-park-solid:back" className={styles.icon} color='#fff'/>
         </button>
         <Link className={styles.navContainers} href={`/cart`}>
-          <Icon icon="solar:bag-outline" className={styles.icon}/>
+          <Icon icon="solar:bag-outline" className={styles.icon} color='#fff'/>
         </Link>
     </section>
   )
 }
-export default ProductPageNav
+export default KroductPageNav

@@ -3,7 +3,7 @@
 import { useParams, useSearchParams } from "next/navigation"
 import { Category, KlosetData, KlosetType, Product } from "../../../Types"
 import { useEffect, useState, useRef} from "react"
-import { populateKlosetPage, populateProductPage } from "../../../api/Public"
+import { populateKloset, populateProductPage } from "../../../api/Public"
 import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react'
 import ProductPageNav from "../../../components/navbars/ProductPageNav"
 import { Navigation, Pagination, Scrollbar, A11y, EffectCoverflow } from 'swiper/modules'
@@ -49,7 +49,7 @@ const page = () => {
           setCategory(actualProduct.category)
         }
 
-        populateKlosetPage(actualProduct.kloset_id).then(kloset => {
+        populateKloset(actualProduct.kloset_id).then(kloset => {
           setKloset(kloset)
         })
       })
@@ -58,7 +58,7 @@ const page = () => {
 
   return (
     <>
-      <ProductPageNav/>
+      <ProductPageNav hideLogo={false}/>
       <main className={styles.main}>
         <section className={styles.view}>
           <article className={styles.firstView}>

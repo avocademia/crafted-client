@@ -26,7 +26,6 @@ const SearchBar = ({products, setSearchResults}: SearchBarProps) => {
             post.summary?.toLowerCase().includes(e.target.value) ||
             post.type.toLowerCase().includes(e.target.value)
         )
-
         setSearchResults(resultsArray)
     }
 
