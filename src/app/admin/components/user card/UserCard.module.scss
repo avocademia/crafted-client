@@ -1,0 +1,46 @@
+@use'../../../../styles/variables.scss';
+
+.card {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 5px 20px;
+    border-radius: 8px;
+    box-shadow: 5px 5px 8px rgb(0, 0, 0, 0.5);margin-top: 15px;
+}
+
+.role {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.card a {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card button {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+
+.card h4 {
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.card h5 {
+    font-family: variables.$secondary-font;
+    font-weight: 400;
+    font-size: 0.7rem;
+}

@@ -1,8 +1,53 @@
+@use'../../../../styles/variables.scss';
+@use'../../../../styles/mixins.scss';
+
 .display {
     width: 100%;
     min-height: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.filterControls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    gap: 20px;
+    height: 30px;
+}
+
+.filterBtn {
+    font-size: 0.7rem;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: 0.5s ease;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    font-family: variables.$primary-font;
+  }
+  
+  .filterBtn:after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    transition: width 0.5s ease;
+    background-color: variables.$primary-color;
+  }
+  
+  .filterBtn:hover:after {
+    width: 100%;
+  }
+
+.active {
+    @include mixins.button1;
+    border-radius: 5px;
+    padding: 2px 15px;
+    font-size: 0.8rem;
 }

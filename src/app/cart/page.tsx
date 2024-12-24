@@ -26,16 +26,7 @@ const page = () => {
 
     const [items, setCartItems] = useState<ItemData[]>([])
     const [products, setProducts] = useState<Product[]>([])
-    const [filters, setFilters] = useState<{ product_id: number; product_type: KlosetType; }[]>()
     const router = useRouter()
-
-    const userChecker = () => {
-        const user = loadUserData()
-        if (!user) {
-            router.push('/signin')
-        }
-    }
-    userChecker()
 
     useEffect(()=> {
 
@@ -50,28 +41,28 @@ const page = () => {
                     }
                 })
 
-                    setFilters(itemFilters)
-
                 const filteredItems = actualItems.filter(item => itemFilters.some( filter =>
                     item.product_id === filter.product_id &&
                     item.product_type === filter.product_type
                 ))
                 setCartItems(filteredItems)
 
-                if (filters) {
-                    populateShop().then(products => {
-                        const Products = products as Product[]
-            
-                            const filteredProducts = Products.filter(product => filters.some(filter =>
-                            product.type === filter.product_type && 
-                            product.id === filter.product_id
-                            ))
-                            setProducts(filteredProducts)
-                    })
-                }
+                populateShop().then(products => {
+                    const Products = products as Product[]
+                    console.log(Products)
+
+                    const filteredProducts = Products.filter(product => itemFilters.some(filter =>
+                        product.type === filter.product_type && 
+                        product.id === filter.product_id
+                    ))
+                        setProducts(filteredProducts)
+                })
+
             }
         })
     },[])
+
+    console.log(items)
 
     return (
       <main className={styles.main}>

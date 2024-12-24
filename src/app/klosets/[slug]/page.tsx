@@ -116,7 +116,7 @@ const page = () => {
                   icon="solar:star-outline"
                   color='#f4da66'
                 />
-                <span>4.5k</span>
+                <span>4.5</span>
               </div>
               <p>4.2k sales</p>
             </div>

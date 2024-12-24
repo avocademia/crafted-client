@@ -15,17 +15,19 @@ const UserCard = ({username,whatsapp_number,role}: UserData) => {
 
   }
   return (
-    <article>
-        <div className={styles.ppContainer}>
-          <Image src='/user.png' alt="profile picture" height={20} width={20}/>
+    <article className={styles.card}>
+        <Image src='/user.png' alt="profile picture" height={20} width={20}/>
+        <h4>@{username}</h4>
+        <div className={styles.role}>
+          <h5>{role}</h5>
+          <button onClick={() => handleRoleChange()}>
+            <Icon icon="material-symbols:question-exchange-rounded" width={24} height={24} color= '#3b0000' />
+          </button>
+          
         </div>
-        <div className={styles.textContainer}>
-          <h4>@{username}</h4>
-          <button onClick={() => handleRoleChange()} >{role}</button>
-          <a href={`https://wa.me/${whatsapp_number}`} target="_blank" >
-            <Icon icon="ic:baseline-whatsapp"/>
-          </a>
-        </div>
+        <a href={`https://wa.me/${whatsapp_number}`} target="_blank" >
+            <Icon icon="mingcute:whatsapp-line" width={30} height={30} color='#002d00'/>
+        </a>
     </article>
   )
 }

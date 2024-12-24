@@ -14,7 +14,7 @@ const ItemDisplay = ({products, items}:{products:Product[], items:ItemData[]}) =
                                   )
             if (matchingItem) {
                 return  ( <article key={product.id} className={styles.itemContainer}>
-                              <input type="checkbox" name="" id="" />
+                              <input type="checkbox" className={styles.checkbox} key={product.id}/>
                               <ItemCard product={product} item={matchingItem}/>
                           </article>
                         )
