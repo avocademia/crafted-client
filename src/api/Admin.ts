@@ -10,6 +10,16 @@ interface APIKlosetFormData {
     address: string,
     dp: File|null,
 }
+interface fetchSingleProductProps{
+    type: KlosetType,
+    product_id: number
+}
+interface updateProductParams {
+    field: string,
+    value: string|number|boolean,
+    product_id: number,
+    type: KlosetType
+}
 
 export const addKloset = async (klosetData:APIKlosetFormData) => {
 
@@ -198,11 +208,6 @@ export const fetchProductsByKloset = async (kloset_id:number, type:KlosetType) =
     }
 }
 
-interface fetchSingleProductProps{
-    type: KlosetType,
-    product_id: number
-}
-
 export const fetchSingleProduct = async (queryParams:fetchSingleProductProps) => {
     const {type, product_id} = queryParams
 
@@ -211,5 +216,21 @@ export const fetchSingleProduct = async (queryParams:fetchSingleProductProps) =>
         return response.data.product
     } catch (error:ErrorData) {
         toast.error(error.response.data.error, {hideProgressBar: true})
+    }
+}
+
+export const editProduct = async (params:updateProductParams) => {
+
+    const {field, value, product_id, type} = params
+
+    try {
+        await axios.patch(
+            `${environment === 'production'? prodUrl:devUrl}/api/admins/${product_id}&${type}`, 
+            {field, value},
+            {withCredentials:true}
+        )
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
+        console.log(error.response.data.error)
     }
 }

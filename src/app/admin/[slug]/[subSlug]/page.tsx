@@ -1,16 +1,14 @@
 'use client'
 
 import ManageKlosetNav from "../../../../components/navbars/ManageKlosetNav"
-import { fetchSingleProduct } from "../../../../api/Admin"
+import { editProduct, fetchSingleProduct } from "../../../../api/Admin"
 import { useParams, useSearchParams } from "next/navigation"
-import { useEffect, useState, useRef} from "react"
+import React, { useEffect, useState, useRef} from "react"
 import { KlosetType, Product } from "../../../../Types"
-import { ToastContainer } from "react-toastify"
 import { Swiper, SwiperSlide, SwiperClass } from "swiper/react"
 import { Icon } from "@iconify/react"
 import Image from "next/image"
 import { Navigation, Pagination, Scrollbar, A11y, EffectCoverflow } from 'swiper/modules'
-import { usePathname } from "next/navigation"
 import styles from './editProduct.module.scss'
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -23,12 +21,42 @@ const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
 const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
 
 const EditProductPage = () => {
+  const initialProduct = {
+    id: -1,
+    name: '',
+    cost: 0,
+    quantity: 0,
+    category: '',
+    sub_category: '',
+    description: '',
+    summary: '',
+    author: '',
+    genres: ['', ''],
+    photos: ['', ''],
+    path: '',
+    production_time: 0,
+    active: true
+  }
   const params = useParams()
   const searchParams = useSearchParams()
   const {subSlug} = params
   const type = searchParams.get('type') as KlosetType
-  const [product, setProduct] = useState<Product>()
   const [activeInput, setInput] = useState('')
+  const [value, setValue] = useState<string|number|boolean>('')
+  const [id, setId] = useState(initialProduct.id)
+  const [name, setName] = useState(initialProduct.name)
+  const [author, setAuthor] = useState(initialProduct.author)
+  const [cost, setCost] = useState(initialProduct.cost)
+  const [summary, setSummary] = useState(initialProduct.summary)
+  const [description, setDescription] = useState(initialProduct.description)
+  const [quantity, setQuantity] = useState(initialProduct.quantity)
+  const [production_time, setProductionTime] = useState(initialProduct.production_time)
+  const [category, setCategory] = useState(initialProduct.category)
+  const [sub_category, setSubCategory] = useState(initialProduct.sub_category)
+  const [path, setPath] = useState(initialProduct.path)
+  const [photos, setPhotos] = useState(initialProduct.photos)
+  const [genre, setGenre] = useState(initialProduct.genres)
+  const [active, setActive] = useState(initialProduct.active)
   const swiperRef = useRef<SwiperClass>()
   const hideSettingsButton = type !== null
 
@@ -38,7 +66,20 @@ const EditProductPage = () => {
 
     useEffect(() => {
       fetchSingleProduct(queryParams).then(product => {
-        setProduct(product)
+        setName(product.name)
+        setAuthor(product.author)
+        setCost(product.cost)
+        setQuantity(product.quantity)
+        setProductionTime(product.production_time)
+        setSummary(product.summary)
+        setDescription(product.description)
+        setCategory(product.category)
+        setSubCategory(product.sub_category)
+        setPhotos(product.photos)
+        setGenre(product.genres)
+        setActive(product.active)
+        setPath(product.path)
+        setId(product.id)
       })
     }, [])   
   }
@@ -51,8 +92,57 @@ const EditProductPage = () => {
     }
   }
 
-  if (product === undefined) {
+  if (name === '') {
     return <main>Product not found</main>
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
+  }
+
+  const handleEditProduct = () => {
+    editProduct({field: activeInput, value, product_id: id, type})
+    setInput('')
+    if (activeInput === 'name' && typeof value === 'string') {
+      setName(value)
+    }
+
+    if (activeInput === 'cost' && typeof value === 'string') {
+      setCost(parseInt(value))
+    }
+
+    if (activeInput === 'quantity' && typeof value === 'string') {
+      setQuantity(parseInt(value))
+    }
+
+    if (activeInput === 'description' && typeof value === 'string') {
+      setDescription(value)
+    }
+
+    if (activeInput === 'summary' && typeof value === 'string') {
+      setSummary(value)
+    }
+
+    if (activeInput === 'author' && typeof value === 'string') {
+      setAuthor(value)
+    }
+
+    if (activeInput === 'production_time' && typeof value === 'string') {
+      setProductionTime(parseInt(value))
+    }
+
+    if (activeInput === 'category' && typeof value === 'string') {
+      setCategory(value)
+    }
+
+    if (activeInput === 'sub_category' && typeof value === 'string') {
+      setSubCategory(value)
+    }
+
+    if (activeInput === 'path' && typeof value === 'string') {
+      setPath(value)
+    }
+
   }
 
   return (
@@ -92,7 +182,7 @@ const EditProductPage = () => {
               pagination={{ clickable: true }}
               centeredSlides={true}
             >
-              {product?.photos.map((photo, index) => (
+              {photos.map((photo, index) => (
                   <SwiperSlide key={index} className={styles.slide}>
                     <div className={styles.photoDeleteBtnWrapper}>
                       <button 
@@ -128,7 +218,7 @@ const EditProductPage = () => {
               <div className={styles.field}>
                 {activeInput !== 'name' &&
                   <>
-                    <span>{product.name}</span>
+                    <span>{name}</span>
                     <button onClick={() => setInput('name')}>
                       <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                     </button>
@@ -136,8 +226,8 @@ const EditProductPage = () => {
                 }
                 {activeInput === 'name' && 
                   <form>
-                    <input type="text" className={styles.input}/>
-                    <button>   
+                    <input type="text" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                    <button onClick={handleEditProduct} type="button">   
                       <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                     </button>
                   </form>
@@ -147,7 +237,7 @@ const EditProductPage = () => {
                 <div className={styles.field}>
                   {activeInput !== 'author' &&
                     <>
-                      <span>{product.author}</span>
+                      <span>{author}</span>
                       <button onClick={() => setInput('author')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
@@ -155,8 +245,8 @@ const EditProductPage = () => {
                   }
                   {activeInput === 'author' && 
                     <form>
-                      <input type="text" className={styles.input}/>
-                      <button>   
+                      <input type="text" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -166,7 +256,7 @@ const EditProductPage = () => {
               <div className={styles.field}>
                   {activeInput !== 'cost' &&
                     <>
-                      <span>KES. {product.cost}</span>
+                      <span>KES. {cost}</span>
                       <button onClick={() => setInput('cost')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
@@ -174,8 +264,8 @@ const EditProductPage = () => {
                   }
                   {activeInput === 'cost' && 
                     <form>
-                      <input type="number" className={styles.input}/>
-                      <button>   
+                      <input type="number" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -185,7 +275,7 @@ const EditProductPage = () => {
                 <div className={styles.field}>
                   {activeInput !== 'quantity' &&
                     <>
-                      <span>quantity: {product.quantity}</span>
+                      <span>quantity: {quantity}</span>
                       <button onClick={() => setInput('quantity')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
@@ -193,8 +283,8 @@ const EditProductPage = () => {
                   }
                   {activeInput === 'quantity' && 
                     <form>
-                      <input type="number" className={styles.input}/>
-                      <button>   
+                      <input type="number" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -205,7 +295,7 @@ const EditProductPage = () => {
                 <div className={styles.field}>
                   {activeInput !== 'description' &&
                     <>
-                      <span>{product.description}</span>
+                      <span>{description}</span>
                       <button onClick={() => setInput('description')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
@@ -213,8 +303,8 @@ const EditProductPage = () => {
                   }
                   {activeInput === 'description' && 
                     <form>
-                      <input type="textarea" className={styles.input}/>
-                      <button>   
+                      <input type="textarea" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -225,7 +315,7 @@ const EditProductPage = () => {
                 <div className={styles.field}>
                   {activeInput !== 'summary' &&
                     <>
-                      <span>{product.summary}</span>
+                      <span>{summary}</span>
                       <button onClick={() => setInput('summary')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
@@ -233,8 +323,8 @@ const EditProductPage = () => {
                   }
                   {activeInput === 'summary' && 
                     <form>
-                      <input type="textarea" className={styles.input}/>
-                      <button>   
+                      <input type="textarea" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -245,7 +335,7 @@ const EditProductPage = () => {
                 <div className={styles.field}>
                   {activeInput !== 'category' &&
                     <>
-                      <span>category: {product.category}</span>
+                      <span>category: {category}</span>
                       <button onClick={() => setInput('category')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
@@ -253,8 +343,8 @@ const EditProductPage = () => {
                   }
                   {activeInput === 'category' && 
                     <form>
-                      <input type="text" className={styles.input}/>
-                      <button>   
+                      <input type="text" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -263,18 +353,18 @@ const EditProductPage = () => {
               }
               { (type === 'retail' || type === 'custom') &&
                 <div className={styles.field}>
-                  {activeInput !== 'sub-category' &&
+                  {activeInput !== 'sub_category' &&
                     <>
-                      <span>sub category: {product.sub_category}</span>
+                      <span>sub category: {sub_category}</span>
                       <button onClick={() => setInput('sub-category')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
                   }
-                  {activeInput === 'sub-category' && 
+                  {activeInput === 'sub_category' && 
                     <form>
-                      <input type="text" className={styles.input}/>
-                      <button>   
+                      <input type="text" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -283,18 +373,18 @@ const EditProductPage = () => {
               }
               { type === 'custom' &&
                 <div className={styles.field}>
-                  {activeInput !== 'production-time' && 
+                  {activeInput !== 'production_time' && 
                     <>
-                      <span>production time: {product.production_time} hrs</span>
+                      <span>production time: {production_time} hrs</span>
                       <button onClick={() => setInput('production-time')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
                   }
-                  {activeInput === 'production-time' &&
+                  {activeInput === 'production_time' &&
                     <form>
-                      <input type="number" className={styles.input}/>
-                      <button>   
+                      <input type="number" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
                     </form>
@@ -304,7 +394,7 @@ const EditProductPage = () => {
               {type === 'digital' && 
                 <form>
                   <input type="file" />
-                  <button>   
+                  <button onClick={handleEditProduct} type="button">   
                     <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                   </button>
                 </form>
@@ -312,10 +402,10 @@ const EditProductPage = () => {
             </div>
             <div className={styles.buttons}>
               <div className={styles.visibility}>
-                { (type === 'custom' || type === 'digital') && product.active === true && 
+                { (type === 'custom' || type === 'digital') && active === true && 
                   <button>hide</button>
                 }
-                { (type === 'custom' || type === 'digital') && product.active === false && 
+                { (type === 'custom' || type === 'digital') && active === false && 
                     <button>launch</button>
                 }
               </div>
