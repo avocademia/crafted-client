@@ -33,19 +33,19 @@ const User = () => {
       }
 
       setUser(newUserData)
+    } else {
+      router.push('/signin')
     }
-  }, [router])
-
-  if (!user) return router.push('/signin')
+  }, [])
 
   return (
     <section>
         <UserNav/>
         <main className={styles.main}>
           <article className={styles.userDetails}>
-            <h1>Hi, {user.first_name}</h1>
+            <h1>Hi, {user?.first_name}</h1>
             <Image src={`/user.png`} width={80} height={80} alt="Profile picture" />
-            <h3>@{user.username}</h3>
+            <h3>@{user?.username}</h3>
           </article>
           <article>
             <Link href='/user/orders'>

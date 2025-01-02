@@ -1,10 +1,10 @@
 'use client'
 
 import ManageKlosetNav from "../../../../components/navbars/ManageKlosetNav"
-import { editProduct, fetchSingleProduct } from "../../../../api/Admin"
+import { deleteProductPhoto, editProduct, fetchSingleProduct } from "../../../../api/Admin"
 import { useParams, useSearchParams } from "next/navigation"
 import React, { useEffect, useState, useRef} from "react"
-import { KlosetType, Product } from "../../../../Types"
+import { KlosetType } from "../../../../Types"
 import { Swiper, SwiperSlide, SwiperClass } from "swiper/react"
 import { Icon } from "@iconify/react"
 import Image from "next/image"
@@ -66,13 +66,9 @@ const EditProductPage = () => {
 
     useEffect(() => {
       fetchSingleProduct(queryParams).then(product => {
-        setName(product.name)
-        setAuthor(product.author)
         setCost(product.cost)
         setQuantity(product.quantity)
         setProductionTime(product.production_time)
-        setSummary(product.summary)
-        setDescription(product.description)
         setCategory(product.category)
         setSubCategory(product.sub_category)
         setPhotos(product.photos)
@@ -80,15 +76,35 @@ const EditProductPage = () => {
         setActive(product.active)
         setPath(product.path)
         setId(product.id)
+        const actualText = () => {
+          const Name = document.createElement('textarea')
+          Name.innerHTML = product.name
+          setName(Name.value)
+
+          const Description = document.createElement('textarea')
+          Description.innerHTML = product.description
+          setDescription(Description.value)
+
+          const Author = document.createElement('textarea')
+          Author.innerHTML = product.author
+          setAuthor(Author.value)
+
+          const Summary = document.createElement('textarea')
+          Summary.innerHTML = product.summary
+          setSummary(Summary.value)
+        }
+        actualText()
       })
     }, [])   
   }
 
-  const handlePhotoDeletion = () => {
+  const handlePhotoDeletion = async (path: string) => {
     const isConfirmed = window.confirm('Are you sure you want todelete this photo')
 
     if (isConfirmed) {
-      console.log('deleted')
+      deleteProductPhoto(path)
+      const newPhotos = photos.filter(photo => photo !== path)
+      setPhotos(newPhotos)
     }
   }
 
@@ -187,7 +203,7 @@ const EditProductPage = () => {
                     <div className={styles.photoDeleteBtnWrapper}>
                       <button 
                         onClick={(e) => {
-                          handlePhotoDeletion();
+                          handlePhotoDeletion(photo);
                         }}
                         className={styles.photoDeleteBtn}
                       >
@@ -199,7 +215,6 @@ const EditProductPage = () => {
                         />
                       </button>
                     </div>
-                    
                   
                     <Image
                       src={`${environment === 'production' ? prodUrl : devUrl}/${photo}`}

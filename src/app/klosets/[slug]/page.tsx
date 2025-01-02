@@ -5,7 +5,6 @@ import styles from './klosetPage.module.scss'
 import { KlosetData, Product } from '../../../Types'
 import { populateKloset } from '../../../api/Public'
 import { useParams } from 'next/navigation'
-import ProductPageNav from '../../../components/navbars/ProductPageNav'
 import Image from 'next/image'
 import SearchBar from '../../shop/components/seach bar/SearchBar'
 import ProductDisplay from './components/ProductDisplay'
@@ -23,6 +22,8 @@ const page = () => {
   const [searchResults, setSearchResults] = useState<Product[]>([])
   const [following, setFollowing] = useState(false)
   const [slogan, setSlogan] = useState('')
+  const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
   const {slug} = useParams()
 
   useEffect(() => {
@@ -33,9 +34,17 @@ const page = () => {
       setSearchResults(data.products)
       setProducts(data.products)
       const actualText = () => {
-        const textarea = document.createElement('textarea')
-        textarea.innerHTML = data.kloset.slogan
-        setSlogan(textarea.value)
+        const Slogan = document.createElement('textarea')
+        Slogan.innerHTML = data.kloset.slogan
+        setSlogan(Slogan.value)
+
+        const Name = document.createElement('textarea')
+        Name.innerHTML = data.kloset.name
+        setName(Name.value)
+
+        const Address = document.createElement('textarea')
+        Address.innerHTML = data.kloset.address
+        setAddress(Address.value)
       }
       actualText()
     })
@@ -55,7 +64,7 @@ const page = () => {
             className={styles.banner}
           />
           <div className={styles.screen}></div>
-          <h1>{kloset?.name}</h1>
+          <h1>{name}</h1>
           <h6>{slogan}</h6>
         </section>
         <section className={styles.details}>

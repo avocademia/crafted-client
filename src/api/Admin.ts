@@ -234,3 +234,20 @@ export const editProduct = async (params:updateProductParams) => {
         console.log(error.response.data.error)
     }
 }
+
+export const deleteProductPhoto = (photo: string) => {
+    
+    try {
+        axios.post(
+            `${environment === 'production'? prodUrl:devUrl}/api/admins/product-photo/delete`,
+            {photo},
+            {withCredentials: true},
+        )
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
+    }
+}
+
+export const editKloset = async () => {
+
+}
