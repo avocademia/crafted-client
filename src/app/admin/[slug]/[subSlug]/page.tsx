@@ -1,7 +1,7 @@
 'use client'
 
 import ManageKlosetNav from "../../../../components/navbars/ManageKlosetNav"
-import { deleteProductPhoto, editProduct, fetchSingleProduct } from "../../../../api/Admin"
+import { addProductPhoto, deleteProductPhoto, editProduct, fetchSingleProduct } from "../../../../api/Admin"
 import { useParams, useSearchParams } from "next/navigation"
 import React, { useEffect, useState, useRef} from "react"
 import { KlosetType } from "../../../../Types"
@@ -58,7 +58,49 @@ const EditProductPage = () => {
   const [genre, setGenre] = useState(initialProduct.genres)
   const [active, setActive] = useState(initialProduct.active)
   const swiperRef = useRef<SwiperClass>()
+  const [errors, setErrors] = useState()
+  const [newPhotoError, setNewPhotoError] =useState('')
   const hideSettingsButton = type !== null
+
+  const apparelSubcategories = [
+    { value: 'tops', label: 'tops' },
+    { value: 'bottoms', label: 'bottoms' },
+    { value: 'dresses', label: 'dresses' },
+    { value: 'underwear', label: 'underwear' },
+    { value: 'outerwear', label: 'outerwear' },
+    { value: 'units', label: 'units' },
+  ]
+
+  const jewellerySubcategories = [
+    { value: 'necklaces', label: 'necklaces' },
+    { value: 'bracelets', label: 'bracelets' },
+    { value: 'earrings', label: 'earrings' },
+    { value: 'rings', label: 'rings' },
+    { value: 'anklets', label: 'anklets' },
+    { value: 'watches', label: 'watches' },
+    { value: 'body', label: 'body' },
+  ]
+
+  const decorSubcategories = [
+    { value: 'paintings', label: 'paintings' },
+    { value: 'wall art', label: 'wall art' },
+    { value: 'glassware', label: 'glassware' },
+    { value: 'ceramics', label: 'ceramics' },
+    { value: 'wood work', label: 'wood work' },
+    { value: 'lights', label: 'lights' },
+    { value: 'furniture', label: 'furniture' },
+    { value: 'rugs', label: 'rugs' },
+    { value: 'other arts', label: 'other arts' },
+  ]
+
+  const shoesSubcategories = [
+    { value: 'sneakers', label: 'sneakers' },
+    { value: 'heels', label: 'heels' },
+    { value: 'boots', label: 'boots' },
+    { value: 'dress shoes', label: 'dress shoes' },
+    { value: 'sandals', label: 'outerwear' },
+    { value: 'other', label: 'other' },
+  ]
 
   if (type && typeof subSlug === 'string') {
 
@@ -116,6 +158,12 @@ const EditProductPage = () => {
     setValue(e.target.value)
   }
 
+  const handleEditSubcategory = (e:React.ChangeEvent<HTMLSelectElement>)=>{
+    editProduct({field: activeInput, value: e.target.value, product_id: id,type})
+    setSubCategory(e.target.value)
+    setInput('')
+  }
+
   const handleEditProduct = () => {
     editProduct({field: activeInput, value, product_id: id, type})
     setInput('')
@@ -142,13 +190,8 @@ const EditProductPage = () => {
     if (activeInput === 'author' && typeof value === 'string') {
       setAuthor(value)
     }
-
     if (activeInput === 'production_time' && typeof value === 'string') {
       setProductionTime(parseInt(value))
-    }
-
-    if (activeInput === 'category' && typeof value === 'string') {
-      setCategory(value)
     }
 
     if (activeInput === 'sub_category' && typeof value === 'string') {
@@ -157,6 +200,44 @@ const EditProductPage = () => {
 
     if (activeInput === 'path' && typeof value === 'string') {
       setPath(value)
+    }
+
+  }
+
+  const validateFile = (file: File) => {
+
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif']
+    const maxSize = 2 * 1024 * 1024 //2mb
+
+    if (file && !allowedFileTypes.includes(file.type)) {
+      return 'Only png, jpg and gif formats are allowed'
+    }
+    if (file && file.size > maxSize) {
+      return 'File must not be larger than 2MB'
+    }
+    return true
+  }
+
+  const handlePhotoAddition = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    const files = e.target.files
+    
+    if (!files || files.length === 0 ) {
+      setNewPhotoError('no photo set')
+      return
+    }
+    console.log(files[0])
+    const noError = validateFile(files[0])
+    setNewPhotoError(noError === true ? '' : noError)
+
+    if (files[0] && noError === true) {
+
+      addProductPhoto(files[0], id, type).then(photo => {
+        const newPhotos = photos
+        newPhotos.push(photo)
+        setPhotos(newPhotos)
+      })
+
     }
 
   }
@@ -226,6 +307,28 @@ const EditProductPage = () => {
                   </SwiperSlide>  
               ))}
             </Swiper>
+          </article>
+          <article className={styles.addPhoto}>
+            <form>
+              <div>
+                <label htmlFor="photoInput">
+                    <Icon 
+                      icon="material-symbols:add-photo-alternate-outline-rounded"
+                      width={24} 
+                      height={24} 
+                      color="#f0f0f0"
+                    />
+                </label>
+                <input
+                  type="file"
+                  accept=".png, .jpg, .gif, .jpeg"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePhotoAddition(e)}
+                  style={{ display: 'none' }}
+                  id="photoInput"
+                />
+                {newPhotoError && <span>{newPhotoError}</span>}
+              </div>
+            </form>
           </article>
           <article className={styles.details}>
             <h1>Product Details</h1>
@@ -346,42 +449,49 @@ const EditProductPage = () => {
                   }
                 </div>
               }
-              { (type === 'retail' || type === 'custom') &&
-                <div className={styles.field}>
-                  {activeInput !== 'category' &&
-                    <>
-                      <span>category: {category}</span>
-                      <button onClick={() => setInput('category')}>
-                        <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
-                      </button>
-                    </>
-                  }
-                  {activeInput === 'category' && 
-                    <form>
-                      <input type="text" className={styles.input} onChange={(e) => handleInputChange(e)}/>
-                      <button onClick={handleEditProduct} type="button">   
-                        <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
-                      </button>
-                    </form>
-                  }
-                </div>
-              }
-              { (type === 'retail' || type === 'custom') &&
+              {(type === 'retail' || type == 'custom') &&
                 <div className={styles.field}>
                   {activeInput !== 'sub_category' &&
                     <>
-                      <span>sub category: {sub_category}</span>
-                      <button onClick={() => setInput('sub-category')}>
+                      <span>Sub-category: {sub_category}</span>
+                      <button onClick={() => setInput('sub_category')}>
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
                   }
                   {activeInput === 'sub_category' && 
                     <form>
-                      <input type="text" className={styles.input} onChange={(e) => handleInputChange(e)}/>
-                      <button onClick={handleEditProduct} type="button">   
-                        <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
-                      </button>
+                      <select onChange={(e)=> handleEditSubcategory(e)}>
+                        <option value="select">select</option>
+                          {category === 'apparel' && 
+                            apparelSubcategories.map((subcategory,index)=> 
+                              ( <option key={index} value={subcategory.value}>
+                                  {subcategory.label}
+                                </option>
+                              ))
+                          }
+                          {category === 'jewellery' && 
+                            jewellerySubcategories.map((subcategory,index)=> 
+                              ( <option key={index} value={subcategory.value}>
+                                  {subcategory.label}
+                                </option>
+                              ))
+                            }
+                          {category === 'shoes' && 
+                            shoesSubcategories.map((subcategory,index)=> 
+                              ( <option key={index} value={subcategory.value}>
+                                  {subcategory.label}
+                                </option>
+                              ))
+                          }
+                          {category === 'decor' && 
+                            decorSubcategories.map((subcategory,index)=> 
+                              ( <option key={index} value={subcategory.value}>
+                                  {subcategory.label}
+                                </option>
+                              ))
+                          }
+                      </select>
                     </form>
                   }
                 </div>
