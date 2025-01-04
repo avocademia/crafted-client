@@ -90,6 +90,7 @@ const klosetSettings = () => {
     const handleEditProduct = () => {
       editKloset()
       setInput('')
+      console.log(activeInput)
       if (activeInput === 'name' && typeof value === 'string') {
         setName(value)
       }
@@ -111,8 +112,6 @@ const klosetSettings = () => {
         const newAddress = shop + ', ' + building + ', ' + street + '.'
         console.log(newAddress)
         setAddress(newAddress)
-      } else {
-        toast.error('make sure all the address fields are field')
       }
   
     }

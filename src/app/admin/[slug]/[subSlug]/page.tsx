@@ -226,18 +226,19 @@ const EditProductPage = () => {
       setNewPhotoError('no photo set')
       return
     }
-    console.log(files[0])
     const noError = validateFile(files[0])
     setNewPhotoError(noError === true ? '' : noError)
 
     if (files[0] && noError === true) {
 
-      addProductPhoto(files[0], id, type).then(photo => {
-        const newPhotos = photos
-        newPhotos.push(photo)
-        setPhotos(newPhotos)
-      })
-
+        const addPhoto = async () => {
+          const photo:string = await addProductPhoto(files[0], id, type)
+          const newPhotos = photos
+          newPhotos.push(photo)
+          setPhotos(newPhotos)
+          window.location.reload()
+        }
+        addPhoto()
     }
 
   }

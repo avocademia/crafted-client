@@ -251,14 +251,14 @@ export const deleteProductPhoto = async (photo: string) => {
 export const addProductPhoto = async (photo:File, product_id:number, product_type:KlosetType)=> {
     const formData = new FormData()
 
-    formData.append('photo', photo)
+    formData.append('new-photo', photo)
     formData.append('product_id', product_id.toString())
     formData.append('product_type',product_type)
 
     try {
         const response = await axios.post(
             `${environment === 'production'? prodUrl:devUrl}/api/admins/product-photo`,
-            {formData},
+            formData,
             {withCredentials: true},
         )
         return response.data.photo
