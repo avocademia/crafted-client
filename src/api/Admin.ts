@@ -10,15 +10,20 @@ interface APIKlosetFormData {
     address: string,
     dp: File|null,
 }
-interface fetchSingleProductProps{
+interface FetchSingleProductProps{
     type: KlosetType,
     product_id: number
 }
-interface updateProductParams {
+interface UpdateProductParams {
     field: string,
     value: string|number|boolean,
     product_id: number,
     type: KlosetType
+}
+interface UpdateKlosetParams {
+    field: string,
+    value: string|number|boolean
+    kloset_id: number
 }
 
 export const addKloset = async (klosetData:APIKlosetFormData) => {
@@ -208,7 +213,7 @@ export const fetchProductsByKloset = async (kloset_id:number, type:KlosetType) =
     }
 }
 
-export const fetchSingleProduct = async (queryParams:fetchSingleProductProps) => {
+export const fetchSingleProduct = async (queryParams:FetchSingleProductProps) => {
     const {type, product_id} = queryParams
 
     try {
@@ -219,7 +224,7 @@ export const fetchSingleProduct = async (queryParams:fetchSingleProductProps) =>
     }
 }
 
-export const editProduct = async (params:updateProductParams) => {
+export const editProduct = async (params:UpdateProductParams) => {
 
     const {field, value, product_id, type} = params
 
@@ -267,6 +272,53 @@ export const addProductPhoto = async (photo:File, product_id:number, product_typ
     }
 }
 
-export const editKloset = async () => {
+export const editKloset = async (data:UpdateKlosetParams) => {
 
+    try {
+        await axios.patch(
+            `${environment === 'production'? prodUrl:devUrl}/api/admins/kloset`,
+            data,
+            {withCredentials: true},
+        )
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
+    }
+}
+
+export const editKlosetBanner = async (photo:File, kloset_id:number) => {
+
+    const formData = new FormData()
+
+    formData.append('banner', photo)
+    formData.append('kloset_id', kloset_id.toString())
+
+    try {
+        const response = await axios.patch(
+            `${environment === 'production'? prodUrl:devUrl}/api/admins/kloset-banner/${kloset_id}`,
+            formData,
+            {withCredentials: true},
+        )
+        return response.data.path
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
+    }
+}
+
+export const editKlosetDP = async (photo:File, kloset_id:number) => {
+
+    const formData = new FormData()
+
+    formData.append('dp', photo)
+    formData.append('kloset_id', kloset_id.toString())
+
+    try {
+        const response = await axios.patch(
+            `${environment === 'production'? prodUrl:devUrl}/api/admins/kloset-dp/${kloset_id}`,
+            formData,
+            {withCredentials: true},
+        )
+        return response.data.path
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
+    }
 }

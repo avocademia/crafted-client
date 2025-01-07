@@ -4,13 +4,14 @@ import ManageKlosetNav from "../../../../components/navbars/ManageKlosetNav"
 import { usePathname, useParams } from "next/navigation"
 import styles from './klosetSettings.module.scss'
 import { useState, useEffect } from "react"
-import { fetchSingleKloset, editKloset } from "../../../../api/Admin"
+import { fetchSingleKloset, editKloset, editKlosetBanner } from "../../../../api/Admin"
 import { Category, KlosetData, KlosetType } from "../../../../Types"
 import { Icon } from "@iconify/react"
 import Image from "next/image"
 import { toast } from "react-toastify"
 
 const klosetSettings = () => {
+  const [id, setId] = useState<number>(0)
   const [name, setName] = useState<string>()
   const [slogan, setSlogan] = useState<string>()
   const [category, setCategory] = useState<Category>()
@@ -52,6 +53,7 @@ const klosetSettings = () => {
           setDT(Kloset.delivery_time)
           setFollowers(Kloset.followers) //unchanged
           setType(Kloset.type) //unchanged
+          setId(kloset.id)
           const actualText = () => {
             const Slogan = document.createElement('textarea')
             Slogan.innerHTML = Kloset.slogan
@@ -70,25 +72,13 @@ const klosetSettings = () => {
     }, [])
 
   }
-
-  const handlePhotoDeletion = (path: string) => {
-      const isConfirmed = window.confirm('Are you sure you want to delete this photo')
   
-      if (isConfirmed) {
-        console.log('deleted')
-      }
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLSelectElement>) => {
+    setValue(e.target.value)
+  }
   
-    if (name === '') {
-      return <main>Product not found</main>
-    }
-  
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLSelectElement>) => {
-      setValue(e.target.value)
-    }
-  
-    const handleEditProduct = () => {
-      editKloset()
+  const handleEditProduct = () => {
+      editKloset({field: activeInput, value, kloset_id:id})
       setInput('')
       console.log(activeInput)
       if (activeInput === 'name' && typeof value === 'string') {
@@ -114,14 +104,58 @@ const klosetSettings = () => {
         setAddress(newAddress)
       }
   
-    }
+  }
 
-    const handleDeliveryStatusChange = () => {
+  const handleDeliveryStatusChange = () => {
       console.log('changing delievery status')
+      //delivery_time = 0
+      //if change to true, delivery_time = 1
+  }
+
+  const validateFile = (file: File) => {
+
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/gif']
+    const maxSize = 2 * 1024 * 1024 //2mb
+
+    if (file && !allowedFileTypes.includes(file.type)) {
+      return 'Only png, jpg and gif formats are allowed'
+    }
+    if (file && file.size > maxSize) {
+      return 'File must not be larger than 2MB'
+    }
+    return true
+  }
+
+  const handleBannerChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+
+    const fileList = e.target.files
+
+    if (!fileList || fileList.length === 0 ) {
+      toast.error('no file added')
+      return
     }
 
-    console.log(address?.length)
+    const noError = validateFile(fileList[0])
+    if (noError !== true){
+      toast.error(noError)
+    }
 
+    if (fileList && noError === true) {
+      editKlosetBanner(fileList[0], id).then(path => {
+        setBanner(path)
+        window.location.reload()
+      })
+    }
+    
+  }
+
+  const handleDPChange = (dp:string) => {
+
+  }
+
+  if (name === '') {
+    return <main>loading...</main>
+  }
 
   return (
     <>
@@ -131,61 +165,59 @@ const klosetSettings = () => {
         <section className={styles.mainSection}>
           <article>
             <div className={styles.bannerContainer}>
-              <div className={styles.photoDeleteBtnWrapper}>
-                <button 
-                  onClick={(e) => {
-                    if (banner) {
-                      handlePhotoDeletion(banner)
-                    }
-                  }}
-                  className={styles.photoDeleteBtn}
-                >
+              <div className={styles.changeBannerWrapper}>
+                <label htmlFor="bannerInput">
                   <Icon 
                     icon="material-symbols:add-photo-alternate-outline-rounded"
                     width={24} 
                     height={24} 
                     color="#f0f0f0"
                   />
-                </button>
-
-                <Image
+                </label>
+                <input
+                  type="file"
+                  accept=".png, .jpg, .gif, .jpeg"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleBannerChange(e)}
+                  style={{ display: 'none' }}
+                  id="bannerInput"
+                />
+              </div> 
+              <Image
                   src={banner? `${environment === 'production' ? prodUrl : devUrl}/${banner}` : '/banner.jpg' }
                   alt="product photo"
                   height={180}
                   width={180}
                   className={styles.banner}
-                />
-              </div> 
+              />
             </div>
 
             <div className={styles.dpContainer}>
-              <div className={styles.photoDeleteBtnWrapper}>
-                <button 
-                  onClick={(e) => {
-                    if (dp) {
-                      handlePhotoDeletion(dp)
-                    }
-                  }}
-                  className={styles.photoDeleteBtn}
-                >
+              <div className={styles.changeBannerWrapper}>
+                <label htmlFor="bannerInput">
                   <Icon 
                     icon="material-symbols:add-photo-alternate-outline-rounded"
                     width={24} 
                     height={24} 
                     color="#f0f0f0"
                   />
-                </button>
-
-                <Image
-                  src={dp? `${environment === 'production' ? prodUrl : devUrl}/${dp}` : '/user.png'}
-                  alt="product photo"
-                  height={180}
-                  width={180}
-                  className={styles.dp}
+                </label>
+                <input
+                  type="file"
+                  accept=".png, .jpg, .gif, .jpeg"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleBannerChange(e)}
+                  style={{ display: 'none' }}
+                  id="bannerInput"
                 />
               </div> 
+
+              <Image
+                src={dp? `${environment === 'production' ? prodUrl : devUrl}/${dp}` : '/user.png'}
+                alt="product photo"
+                height={180}
+                width={180}
+                className={styles.dp}
+              /> 
             </div>
-     
           </article>
           <article>
             <div className={styles.field}>
