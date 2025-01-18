@@ -57,7 +57,7 @@ const page = () => {
       <main className={styles.main}>
         <section className={styles.profile}>
           <Image 
-            src={'/banner.jpg'}
+            src={kloset && kloset.dp? `${environment === 'production' ? prodUrl : devUrl}/${kloset.banner}` : "/banner.jpg"}
             alt='Kloset Banner'
             width={400}
             height={250}
@@ -69,7 +69,7 @@ const page = () => {
         </section>
         <section className={styles.details}>
             <Image 
-                src={'/user.png'}
+                src={kloset && kloset.dp? `${environment === 'production' ? prodUrl : devUrl}/${kloset.dp}` : '/user.png'}
                 alt='Kloset Logo'
                 width={80}
                 height={80}

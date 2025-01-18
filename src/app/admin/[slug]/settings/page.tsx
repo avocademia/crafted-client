@@ -4,7 +4,7 @@ import ManageKlosetNav from "../../../../components/navbars/ManageKlosetNav"
 import { usePathname, useParams } from "next/navigation"
 import styles from './klosetSettings.module.scss'
 import { useState, useEffect } from "react"
-import { fetchSingleKloset, editKloset, editKlosetBanner } from "../../../../api/Admin"
+import { fetchSingleKloset, editKloset, editKlosetBanner, editKlosetDP } from "../../../../api/Admin"
 import { Category, KlosetData, KlosetType } from "../../../../Types"
 import { Icon } from "@iconify/react"
 import Image from "next/image"
@@ -76,11 +76,18 @@ const klosetSettings = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLSelectElement>) => {
     setValue(e.target.value)
   }
+
+  const handleEditAddress = () => {
+      const newAddress = shop + ', ' + building + ', ' + street + '.'
+      setAddress(newAddress)
+      editKloset({field: activeInput, value:newAddress, kloset_id:id})
+      setInput('')
+  }
   
   const handleEditProduct = () => {
-      editKloset({field: activeInput, value, kloset_id:id})
-      setInput('')
-      console.log(activeInput)
+        editKloset({field: activeInput, value, kloset_id:id})
+        setInput('')
+      
       if (activeInput === 'name' && typeof value === 'string') {
         setName(value)
       }
@@ -89,21 +96,10 @@ const klosetSettings = () => {
         setSlogan(value)
       }
   
-      if (activeInput === 'category' && typeof value === 'string') {
-        const actualValue = value as Category
-        setAddress(actualValue)
-      }
-  
       if (activeInput === 'delivery_time' && typeof value === 'string') {
         setDT(parseInt(value))
       }
 
-      if (activeInput === 'address' && shop && building && street) {
-        const newAddress = shop + ', ' + building + ', ' + street + '.'
-        console.log(newAddress)
-        setAddress(newAddress)
-      }
-  
   }
 
   const handleDeliveryStatusChange = () => {
@@ -143,13 +139,31 @@ const klosetSettings = () => {
     if (fileList && noError === true) {
       editKlosetBanner(fileList[0], id).then(path => {
         setBanner(path)
-        window.location.reload()
       })
     }
-    
   }
 
-  const handleDPChange = (dp:string) => {
+  const handleDPChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+
+    const fileList = e.target.files
+
+    if (!fileList || fileList.length === 0 ) {
+      toast.error('no file added')
+      return
+    }
+
+    const noError = validateFile(fileList[0])
+    if (noError !== true){
+      toast.error(noError)
+    }
+
+    if (fileList && noError === true) {
+      editKlosetDP(fileList[0], id).then(path => {
+        setDP(path)
+      })
+    }
+
+    window.location.reload()
 
   }
 
@@ -192,8 +206,8 @@ const klosetSettings = () => {
             </div>
 
             <div className={styles.dpContainer}>
-              <div className={styles.changeBannerWrapper}>
-                <label htmlFor="bannerInput">
+              <div className={styles.changeDOWrapper}>
+                <label htmlFor="DPInput">
                   <Icon 
                     icon="material-symbols:add-photo-alternate-outline-rounded"
                     width={24} 
@@ -204,21 +218,21 @@ const klosetSettings = () => {
                 <input
                   type="file"
                   accept=".png, .jpg, .gif, .jpeg"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleBannerChange(e)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleDPChange(e)}
                   style={{ display: 'none' }}
-                  id="bannerInput"
+                  id="DPInput"
                 />
               </div> 
 
               <Image
                 src={dp? `${environment === 'production' ? prodUrl : devUrl}/${dp}` : '/user.png'}
-                alt="product photo"
+                alt="logo"
                 height={180}
                 width={180}
                 className={styles.dp}
               /> 
             </div>
-          </article>
+          </article> 
           <article>
             <div className={styles.field}>
               {activeInput !== 'name' &&
@@ -256,7 +270,8 @@ const klosetSettings = () => {
                 </form>
               }
             </div>
-            {address && address?.length > 4 && <div className={styles.field}>
+            {type !== 'digital'&&
+            <div className={styles.field}>
               {activeInput !== 'address' &&
                 <>
                   <span>Address: {address}</span>
@@ -281,21 +296,24 @@ const klosetSettings = () => {
                       <input type="text" onChange={(e) => setStreet(e.target.value)}/>
                     </div>
                   </div>
-                  <button onClick={handleEditProduct} type="button">   
+                  <button onClick={handleEditAddress} type="button">   
                     <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                   </button>
                 </form>
               }
             </div>}
-            <div className={styles.field}>
+            {type !== 'digital' &&
+
+              <>
+                <div className={styles.field}>
               Delivery: 
                 {delivery && <p>available</p>}
                 {!delivery && <p>not available</p>}
                 <button onClick={() => handleDeliveryStatusChange()}>
                   <Icon icon="material-symbols:question-exchange-rounded" width={24} height={24} color= '#3b0000' />
                 </button>
-            </div>
-            <div className={styles.field}>
+              </div>
+              <div className={styles.field}>
               {activeInput !== 'delivery_time' &&
                 <>
                   <span>Delivery Time: {delivery_time} days </span>
@@ -312,31 +330,9 @@ const klosetSettings = () => {
                   </button>
                 </form>
               }
-            </div>
-            <div className={styles.field}>
-              {activeInput !== 'category' &&
-                <>
-                  <span>Category: {category} </span>
-                  <button onClick={() => setInput('category')}>
-                    <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
-                  </button>
-                </>
-              }
-              {activeInput === 'category' && 
-                <form>
-                  <select className={styles.input} onChange={(e) => handleInputChange(e)}>
-                    <option value="select">select</option>
-                    <option value="apparel">apparel</option>
-                    <option value="jewellery">jewellery</option>
-                    <option value="shoes">shoes</option>
-                    <option value="decor">decor</option>
-                  </select>
-                  <button onClick={handleEditProduct} type="button">   
-                    <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
-                  </button>
-                </form>
-              }
-            </div>
+              </div>
+              </>
+            }
           </article>
         </section>
       </main>

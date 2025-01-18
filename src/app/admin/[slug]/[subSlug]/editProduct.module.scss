@@ -18,7 +18,7 @@
 
 .photos {
     position: relative;
-    height: 250px;
+    height: 280px;
     width: 100%;
 }
 
@@ -68,8 +68,6 @@
 }
 
 .productImage {
-    height: 250px;
-    width: 250px;
     border-radius: 10px;
 }
 
@@ -151,6 +149,18 @@
     &:hover {
         transform: scale(1.2);
     }
+}
+
+.main textarea{
+        width: 300px; 
+        height: 150px; 
+        resize: none; 
+        overflow: none;
+        padding: 10px;
+        border: 1px solid variables.$primary-color; 
+        border-radius: 4px; 
+        font-family: Arial;
+        font-size: 14px;
 }
 
 @media (max-width: 768px) {

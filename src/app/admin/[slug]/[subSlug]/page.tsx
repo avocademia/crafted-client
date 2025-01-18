@@ -15,6 +15,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 import 'swiper/css/effect-coverflow'
+import { toast } from "react-toastify"
 
 const environment = process.env.NEXT_PUBLIC_NODE_ENV
 const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
@@ -154,7 +155,7 @@ const EditProductPage = () => {
     return <main>Product not found</main>
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value)
   }
 
@@ -223,23 +224,22 @@ const EditProductPage = () => {
     const files = e.target.files
     
     if (!files || files.length === 0 ) {
-      setNewPhotoError('no photo set')
+      toast.error('no file added')
       return
     }
+    
     const noError = validateFile(files[0])
     setNewPhotoError(noError === true ? '' : noError)
 
     if (files[0] && noError === true) {
 
-        const addPhoto = async () => {
-          const photo:string = await addProductPhoto(files[0], id, type)
-          const newPhotos = photos
-          newPhotos.push(photo)
-          setPhotos(newPhotos)
-          window.location.reload()
-        }
-        addPhoto()
+        addProductPhoto(files[0], id, type).then(photo => {
+            const newPhotos = [...photos, photo]
+            setPhotos(newPhotos)
+        }) 
     }
+
+    window.location.reload()
 
   }
 
@@ -301,11 +301,11 @@ const EditProductPage = () => {
                     <Image
                       src={`${environment === 'production' ? prodUrl : devUrl}/${photo}`}
                       alt="product photo"
-                      height={180}
-                      width={180}
-                      className={styles.productImage}
+                      height={280}
+                      width={250}
+                      className={styles.productPhoto}
                     />
-                  </SwiperSlide>  
+                  </SwiperSlide>   
               ))}
             </Swiper>
           </article>
@@ -323,7 +323,7 @@ const EditProductPage = () => {
                 <input
                   type="file"
                   accept=".png, .jpg, .gif, .jpeg"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handlePhotoAddition(e)}
+                  onChange={(e) => handlePhotoAddition(e)}
                   style={{ display: 'none' }}
                   id="photoInput"
                 />
@@ -338,7 +338,7 @@ const EditProductPage = () => {
                 {activeInput !== 'name' &&
                   <>
                     <span>{name}</span>
-                    <button onClick={() => setInput('name')}>
+                    <button onClick={() => setInput('name')} type="button">
                       <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                     </button>
                   </>
@@ -357,7 +357,7 @@ const EditProductPage = () => {
                   {activeInput !== 'author' &&
                     <>
                       <span>{author}</span>
-                      <button onClick={() => setInput('author')}>
+                      <button onClick={() => setInput('author')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
@@ -376,7 +376,7 @@ const EditProductPage = () => {
                   {activeInput !== 'cost' &&
                     <>
                       <span>KES. {cost}</span>
-                      <button onClick={() => setInput('cost')}>
+                      <button onClick={() => setInput('cost')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
@@ -395,7 +395,7 @@ const EditProductPage = () => {
                   {activeInput !== 'quantity' &&
                     <>
                       <span>quantity: {quantity}</span>
-                      <button onClick={() => setInput('quantity')}>
+                      <button onClick={() => setInput('quantity')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
@@ -415,7 +415,7 @@ const EditProductPage = () => {
                   {activeInput !== 'description' &&
                     <>
                       <span>{description}</span>
-                      <button onClick={() => setInput('description')}>
+                      <button onClick={() => setInput('description')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
@@ -435,14 +435,14 @@ const EditProductPage = () => {
                   {activeInput !== 'summary' &&
                     <>
                       <span>{summary}</span>
-                      <button onClick={() => setInput('summary')}>
+                      <button onClick={() => setInput('summary')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
                   }
                   {activeInput === 'summary' && 
                     <form>
-                      <input type="textarea" className={styles.input} onChange={(e) => handleInputChange(e)}/>
+                      <textarea className={styles.input} onChange={(e) => handleInputChange(e)}/>
                       <button onClick={handleEditProduct} type="button">   
                         <Icon icon="icon-park-solid:save" width={24} height={24} color='#002d00'/>
                       </button>
@@ -455,7 +455,7 @@ const EditProductPage = () => {
                   {activeInput !== 'sub_category' &&
                     <>
                       <span>Sub-category: {sub_category}</span>
-                      <button onClick={() => setInput('sub_category')}>
+                      <button onClick={() => setInput('sub_category')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
@@ -502,7 +502,7 @@ const EditProductPage = () => {
                   {activeInput !== 'production_time' && 
                     <>
                       <span>production time: {production_time} hrs</span>
-                      <button onClick={() => setInput('production-time')}>
+                      <button onClick={() => setInput('production-time')} type="button">
                         <Icon icon="akar-icons:edit" width={24} height={24} color='#002d00'/>
                       </button>
                     </>
@@ -535,7 +535,7 @@ const EditProductPage = () => {
                     <button>launch</button>
                 }
               </div>
-              <button className={styles.delete}>   
+              <button className={styles.delete} type="button">   
                   <Icon icon="hugeicons:delete-03" width={35} height={35} color='#3b0000'/>
               </button>
             </div>

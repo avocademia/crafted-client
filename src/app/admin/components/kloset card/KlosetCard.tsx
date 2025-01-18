@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import styles from './KlosetCard.module.scss'
 import dotenv from 'dotenv'
-import { Kloset } from '../../../../Types'
+import { KlosetData } from '../../../../Types'
 
 const environment = process.env.NEXT_PUBLIC_NODE_ENV
 const prodUrl = process.env.NEXT_PUBLIC_PROD_SERVER_URL
@@ -9,7 +9,7 @@ const devUrl = process.env.NEXT_PUBLIC_DEV_SERVER_URL
 
 dotenv.config()
 interface KlosetCardProps {
-  kloset: Kloset
+  kloset: KlosetData
 }
 
 const KlosetCard = ({kloset}: KlosetCardProps) => {
@@ -19,7 +19,7 @@ const KlosetCard = ({kloset}: KlosetCardProps) => {
         <div className={styles.imageContainer}>
             <Image 
               alt='display_picture' 
-              src={`${environment === 'production'?prodUrl:devUrl}/${dp}`} 
+              src={kloset && kloset.dp? `${environment === 'production' ? prodUrl : devUrl}/${kloset.dp}` : "/user.png"} 
               height={80} width={80} 
               className={styles.image}
             />
@@ -27,7 +27,7 @@ const KlosetCard = ({kloset}: KlosetCardProps) => {
         <div className={styles.textContainer}>
             <h3>{name}</h3>
             <div>{type}</div>
-            <span>{followers.length} followers</span>
+            <span>{followers? followers.length:'no'} followers</span>
         </div>
     </div>
   )
