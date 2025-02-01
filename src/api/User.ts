@@ -63,6 +63,16 @@ export const signOutUser = async () => {
     }
 }
 
+export const userRole = async () => {
+
+    try {
+        const response = await axios.get(`${environment === 'production'? prodUrl:devUrl}/api/users/send-role`, {withCredentials: true})
+        return response.data.role
+    } catch (error:ErrorData) {
+        toast.error(error.response.data.error, {hideProgressBar: true})
+    }
+}
+
 export const followKloset = async (klosetId:number) => {
 
     try {
